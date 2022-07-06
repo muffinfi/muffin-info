@@ -42,6 +42,7 @@ export default function CurrencyLogo({
   const optimismList = useCombinedActiveList()?.[10]
   const arbitrumList = useCombinedActiveList()?.[42161]
   const polygon = useCombinedActiveList()?.[137]
+  const rinkebyList = useCombinedActiveList()?.[4]
 
   const [activeNetwork] = useActiveNetworkVersion()
 
@@ -71,6 +72,14 @@ export default function CurrencyLogo({
   }, [checkSummed, polygon])
   const uriLocationsPOlygon = useHttpLocations(polygonURI)
 
+  const rinkebyURI = useMemo(() => {
+    if (checkSummed && rinkebyList?.[checkSummed]) {
+      return rinkebyList?.[checkSummed].token.logoURI
+    }
+    return undefined
+  }, [checkSummed, rinkebyList])
+  const uriLocationsRinkeby = useHttpLocations(rinkebyURI)
+
   //temp until token logo issue merged
   const tempSources: { [address: string]: string } = useMemo(() => {
     return {
@@ -89,11 +98,12 @@ export default function CurrencyLogo({
         ...uriLocationsOptimism,
         ...uriLocationsArbitrum,
         ...uriLocationsPOlygon,
+        ...uriLocationsRinkeby,
         override,
       ]
     }
     return []
-  }, [address, tempSources, uriLocationsArbitrum, uriLocationsOptimism, uriLocationsPOlygon])
+  }, [address, tempSources, uriLocationsArbitrum, uriLocationsOptimism, uriLocationsPOlygon, uriLocationsRinkeby])
 
   if (activeNetwork === OptimismNetworkInfo && address === '0x4200000000000000000000000000000000000006') {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />
