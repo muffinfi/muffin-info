@@ -157,8 +157,14 @@ export function isTokenOnList(tokenAddressMap: TokenAddressMap, token?: Token): 
   return Boolean(token?.isToken && tokenAddressMap[token.chainId]?.[token.address])
 }
 
+/**
+ * @param fee Expressed in 0.1 bps (e.g. 10 units == 1bps)
+ */
 export function feeTierPercent(fee: number): string {
-  return (fee / 10000).toPrecision(1) + '%'
+  // Round to 3 sig figs if fee is < 0.01% (1bps).
+  // Otherwise, round to 2 sig figs.
+  if (fee < 10) return (fee / 1000).toFixed(3) + '%'
+  return (fee / 1000).toFixed(2) + '%'
 }
 
 export function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
