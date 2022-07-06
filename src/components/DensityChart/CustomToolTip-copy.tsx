@@ -39,14 +39,13 @@ export function CustomToolTip<TValue extends ValueType, TName extends NameType>(
   const tickIsLeftSide = tickIdx != null && tickIdx < currentTickIdx
   const { tokenLocked, tvl } = useMemo(() => {
     if (tickIdx === currentTickIdx) return { tokenLocked: pool?.token1 }
-    const { amount0, amount1 }: Partial<ReturnType<typeof PoolMath.amountsForLiquidityD8>> =
+    const { amount0, amount1 }: Partial<ReturnType<typeof PoolMath.amountsForLiquidityDeltaD8>> =
       tickIdx != null && pool?.tickSpacing
-        ? PoolMath.amountsForLiquidityD8(
+        ? PoolMath.amountsForLiquidityDeltaD8(
             TickMath.tickToSqrtPriceX72(tickIdx),
             TickMath.tickToSqrtPriceX72(tickIdx + pool.tickSpacing * (tickIsLeftSide ? -2 : 1)),
             TickMath.tickToSqrtPriceX72(tickIdx + pool.tickSpacing * (tickIsLeftSide ? -1 : 2)),
-            activeLiquidityD8,
-            false
+            activeLiquidityD8
           )
         : {}
     const tvlToken0 = pool?.token0
