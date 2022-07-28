@@ -1,4 +1,4 @@
-import { Pool, TickMath, Tier, toD8 } from '@muffinfi/muffin-v1-sdk'
+import { Pool, TickMath, Tier, toD8 } from '@muffinfi/muffin-sdk'
 import { Token } from '@uniswap/sdk-core'
 import Loader from 'components/Loader'
 import { fetchTicksSurroundingPrice, TickProcessed } from 'data/tiers/tickData'

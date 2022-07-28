@@ -1,5 +1,5 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { TickMath, tickToPrice } from '@muffinfi/muffin-v1-sdk'
+import { TickMath, tickToPrice } from '@muffinfi/muffin-sdk'
 import { Token } from '@uniswap/sdk-core'
 import gql from 'graphql-tag'
 import JSBI from 'jsbi'

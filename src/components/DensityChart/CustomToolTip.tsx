@@ -1,4 +1,4 @@
-import { PoolMath, TickMath, toD8 } from '@muffinfi/muffin-v1-sdk'
+import { PoolMath, TickMath, toD8 } from '@muffinfi/muffin-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
