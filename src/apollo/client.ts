@@ -23,7 +23,7 @@ export const blockClient = new ApolloClient({
 
 export const client = new ApolloClient({
   // uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-subgraph',
-  uri: 'https://api.thegraph.com/subgraphs/name/virtues-milkier/muffin-rinkeby',
+  uri: 'https://api.thegraph.com/subgraphs/name/dkenw/muffin-rinkeby', // FIXME: temp
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
