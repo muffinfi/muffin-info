@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateActi
 import { createChart, IChartApi } from 'lightweight-charts'
 import { RowBetween } from 'components/Row'
 import Card from '../Card'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import useTheme from 'hooks/useTheme'

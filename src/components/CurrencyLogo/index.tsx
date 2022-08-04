@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { isAddress } from 'utils'
 import Logo from '../Logo'
 import { useCombinedActiveList } from 'state/lists/hooks'

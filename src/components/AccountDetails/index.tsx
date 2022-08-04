@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { useActiveWeb3React } from '../../hooks'
 import { shortenAddress } from '../../utils'
 import Copy from './Copy'

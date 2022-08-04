@@ -8,7 +8,7 @@ import { RowFixed } from 'components/Row'
 import React, { useMemo } from 'react'
 import { useAllPoolData } from 'state/pools/hooks'
 import { PoolData } from 'state/pools/reducer'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { StyledInternalLink, TYPE } from 'theme'
 import { formatDollarAmount } from 'utils/numbers'
 

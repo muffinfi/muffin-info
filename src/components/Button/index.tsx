@@ -1,5 +1,5 @@
 import React, { HTMLAttributes } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { darken, lighten } from 'polished'
 
 import { RowBetween } from '../Row'

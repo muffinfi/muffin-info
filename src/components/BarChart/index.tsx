@@ -5,7 +5,7 @@ import usePrevious from 'hooks/usePrevious'
 import type { ChartOptions, DeepPartial, HistogramData, HistogramSeriesOptions, IChartApi } from 'lightweight-charts'
 import React, { Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useRef } from 'react'
 import { Chart, HistogramSeries } from 'react-lightweight-charts-simple'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import Card from '../Card'
 dayjs.extend(utc)
 

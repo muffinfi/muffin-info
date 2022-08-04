@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { useAllTokenData } from 'state/tokens/hooks'
 import { GreyCard } from 'components/Card'
 import { TokenData } from 'state/tokens/reducer'

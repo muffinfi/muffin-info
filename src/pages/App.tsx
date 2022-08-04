@@ -5,7 +5,7 @@ import { EthereumNetworkInfo, OptimismNetworkInfo, SUPPORTED_NETWORK_VERSIONS } 
 import React, { Suspense, useEffect, useState } from 'react'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { ExternalLink, TYPE } from 'theme'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'

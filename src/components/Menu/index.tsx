@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { BookOpen, Code, Info, MessageCircle } from 'react-feather'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'

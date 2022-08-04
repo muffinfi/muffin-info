@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 
 // responsive text

@@ -7,7 +7,7 @@ import type { TierTickData } from 'data/tiers/tickData'
 import useTheme from 'hooks/useTheme'
 import React, { useMemo } from 'react'
 import { TierData } from 'state/tiers/reducer'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { formatAmount } from 'utils/numbers'
 

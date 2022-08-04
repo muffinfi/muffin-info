@@ -14,7 +14,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Chart, ChartFitContentTrigger, HistogramSeries, PriceLine, Tooltip } from 'react-lightweight-charts-simple'
 import { useClients } from 'state/application/hooks'
 import { useTierDatas, useTierTickData } from 'state/tiers/hooks'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { isAddress } from 'utils'
 import CustomToolTip from './CustomToolTip'
 

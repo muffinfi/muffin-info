@@ -7,7 +7,7 @@ import useTheme from 'hooks/useTheme'
 import React, { useMemo } from 'react'
 import { TooltipProps } from 'recharts'
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
 import { formatAmount } from 'utils/numbers'
 

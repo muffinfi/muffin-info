@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import { TYPE, ExternalLink } from 'theme'
 import { useEthPrices } from 'hooks/useEthPrices'

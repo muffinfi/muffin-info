@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, ReactNode } from 'react'
 import { BarChart, ResponsiveContainer, XAxis, Tooltip, Bar } from 'recharts'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import Card from 'components/Card'
 import { RowBetween } from 'components/Row'
 import dayjs from 'dayjs'

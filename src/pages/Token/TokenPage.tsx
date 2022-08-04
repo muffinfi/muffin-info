@@ -35,7 +35,7 @@ import {
   useTokenTransactions,
 } from 'state/tokens/hooks'
 import { useSavedTokens } from 'state/user/hooks'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { StyledInternalLink, TYPE } from 'theme'
 import { currentTimestamp, getEtherscanLink, shortenAddress } from 'utils'
 import { unixToDate } from 'utils/date'

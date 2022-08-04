@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import CurrencyLogo from '../CurrencyLogo'
 
 const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`

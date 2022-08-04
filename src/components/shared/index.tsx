@@ -1,6 +1,6 @@
 import Row from 'components/Row'
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
 export const PageButtons = styled.div`
   width: 100%;

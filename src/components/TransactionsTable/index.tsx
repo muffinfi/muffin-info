@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { DarkGreyCard } from 'components/Card'
 import Loader from 'components/Loader'
 import { AutoColumn } from 'components/Column'

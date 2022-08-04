@@ -25,7 +25,7 @@ import { usePoolChartData, usePoolDatas, usePoolTransactions } from 'state/pools
 import { useTierDatas } from 'state/tiers/hooks'
 import { normalizeKey } from 'state/tiers/utils'
 import { useSavedPools } from 'state/user/hooks'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { StyledInternalLink, TYPE } from 'theme'
 import { unixToDate } from 'utils/date'
 import { networkPrefix } from 'utils/networkPrefix'
