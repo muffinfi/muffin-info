@@ -34,3 +34,15 @@ export const formatAmount = (num: number | undefined, digits = 2) => {
     },
   })
 }
+
+export const formatAmountDetailed = (num: number | undefined, digits = 2) => {
+  if (num === 0) return '0'
+  if (!num) return '-'
+
+  if (num < 0.00001) return '<0.000001'
+  if (num < 0.0001) return num.toLocaleString(undefined, { maximumSignificantDigits: 1 })
+  if (num < 0.001) return num.toLocaleString(undefined, { maximumSignificantDigits: 2 })
+  if (num < 0.01) return num.toLocaleString(undefined, { maximumSignificantDigits: 3 })
+  if (num < 10000) return num.toLocaleString(undefined, { maximumSignificantDigits: 4, minimumSignificantDigits: 4 })
+  return num.toLocaleString(undefined, { maximumFractionDigits: 0 })
+}

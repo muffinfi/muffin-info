@@ -1,5 +1,5 @@
 import { DarkGreyCard } from 'components/Card'
-import TopBar from 'components/Header/TopBar'
+// import TopBar from 'components/Header/TopBar'
 import { LocalLoader } from 'components/Loader'
 import { EthereumNetworkInfo, OptimismNetworkInfo, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
 import React, { Suspense, useEffect, useState } from 'react'
@@ -17,6 +17,7 @@ import PoolPage from './Pool/PoolPage'
 import PoolsOverview from './Pool/PoolsOverview'
 import { RedirectToTier0 } from './Tier/redirects'
 import TierPage from './Tier/TierPage'
+import TierPage2 from './Tier/TierPage/index2'
 import TiersOverview from './Tier/TiersOverview'
 import { RedirectInvalidToken } from './Token/redirects'
 import TokensOverview from './Token/TokensOverview'
@@ -25,7 +26,7 @@ const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: center;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   min-height: 100vh;
 `
 
@@ -42,11 +43,12 @@ const BodyWrapper = styled.div<{ warningActive?: boolean }>`
   flex-direction: column;
   width: 100%;
   padding-top: 40px;
-  margin-top: ${({ warningActive }) => (warningActive ? '140px' : '100px')};
+  /* margin-top: ${({ warningActive }) => (warningActive ? '140px' : '100px')}; */
+  margin-top: ${({ warningActive }) => (warningActive ? '100px' : '60px')};
   align-items: center;
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* overflow-y: auto; */
+  /* overflow-x: hidden; */
   z-index: 1;
 
   > * {
@@ -63,11 +65,11 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
-const Hide1080 = styled.div`
-  @media (max-width: 1080px) {
-    display: none;
-  }
-`
+// const Hide1080 = styled.div`
+//   @media (max-width: 1080px) {
+//     display: none;
+//   }
+// `
 
 const WarningWrapper = styled.div`
   width: 100%;
@@ -136,9 +138,9 @@ export default function App() {
                 </WarningBanner>
               </WarningWrapper>
             )}
-            <Hide1080>
+            {/* <Hide1080>
               <TopBar />
-            </Hide1080>
+            </Hide1080> */}
             <Header />
           </HeaderWrapper>
           {subgraphStatus.available === false ? (
@@ -159,7 +161,9 @@ export default function App() {
             <BodyWrapper warningActive={showNotSyncedWarning}>
               <Popups />
               <Switch>
-                <Route exact strict path="/:networkID?/pools/:poolId/tiers/:tierId" component={TierPage} />
+                {/* FIXME:  temp adding a test tier page  */}
+                <Route exact strict path="/:networkID?/pools/:poolId/tiers-original/:tierId" component={TierPage} />
+                <Route exact strict path="/:networkID?/pools/:poolId/tiers/:tierId" component={TierPage2} />
                 <Route exact strict path="/:networkID?/pools/:poolId/tiers" component={RedirectToTier0} />
                 <Route exact strict path="/:networkID?/tiers" component={TiersOverview} />
                 <Route exact strict path="/:networkID?/pools/:poolId" component={PoolPage} />
