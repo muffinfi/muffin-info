@@ -1,7 +1,7 @@
 import { DarkGreyCard } from 'components/Card'
-import BarChart2 from 'components/charts2/BarChart'
+import BarChart from 'components/charts2/BarChart'
 import ChartLabel, { useHandleHoverData } from 'components/charts2/ChartLabel'
-import LineChart2 from 'components/charts2/LineChart'
+import LineChart from 'components/charts2/LineChart'
 import { TimeSeriesDatum } from 'components/charts2/types'
 import DensityChart from 'components/DensityChart/alt'
 import Loader from 'components/Loader'
@@ -72,19 +72,19 @@ export default function TierCharts3({ tierKey, color, activeNetwork, tierData }:
       <DarkGreyCard>
         Volume 24h
         <ChartLabel value={volumeHandler.value} valueUnit={'USD'} valueLabel={volumeHandler.valueLabel} />
-        <BarChart2 data={formattedVolumeData} color={color} height={280} onHoverData={volumeHandler.handleHoverData} />
+        <BarChart data={formattedVolumeData} color={color} height={280} onHoverData={volumeHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
         TVL
         <ChartLabel value={tvlHandler.value} valueUnit={'USD'} valueLabel={tvlHandler.valueLabel} />
-        <LineChart2 data={formattedTvlData} color={color} height={280} onHoverData={tvlHandler.handleHoverData} />
+        <LineChart data={formattedTvlData} color={color} height={280} onHoverData={tvlHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
         Fees 24h
         <ChartLabel value={feesHandler.value} valueUnit={'USD'} valueLabel={feesHandler.valueLabel} />
-        <BarChart2 data={formattedFeesUSD} color={color} height={280} onHoverData={feesHandler.handleHoverData} />
+        <BarChart data={formattedFeesUSD} color={color} height={280} onHoverData={feesHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
@@ -94,7 +94,7 @@ export default function TierCharts3({ tierKey, color, activeNetwork, tierData }:
           valueUnit={tierData.pool.token0.symbol}
           valueLabel={priceHandler.valueLabel}
         />
-        <LineChart2 data={formattedPrice0} color={color} height={280} onHoverData={priceHandler.handleHoverData} />
+        <LineChart data={formattedPrice0} color={color} height={280} onHoverData={priceHandler.handleHoverData} />
       </DarkGreyCard>
 
       {activeNetwork === ArbitrumNetworkInfo ? null : (

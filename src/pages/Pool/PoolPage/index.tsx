@@ -94,7 +94,7 @@ const SubInfoRow = styled(Row)`
   `};
 `
 
-export default function PoolPage2({
+export default function PoolPage({
   match: {
     params: { poolId },
   },

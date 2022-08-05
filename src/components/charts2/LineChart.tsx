@@ -79,8 +79,8 @@ function Chart({
             dataKey="value"
             orientation="right"
             tickFormatter={(value) => formatDollarAmount(value)}
-            // axisLine={{ stroke: 'rgba(255,255,255,0.15)' }}
-            // tickLine={{ stroke: 'rgba(255,255,255,0.15)' }}
+            axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
+            tickLine={{ stroke: 'rgba(255,255,255,0.1)' }}
             // tick={{ fill: theme.text2 }}
           />
           <Tooltip

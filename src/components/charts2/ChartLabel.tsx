@@ -6,8 +6,8 @@ import { unixToDate } from 'utils/date'
 import { formatDollarAmount } from 'utils/numbers'
 import { TimeSeriesDataHandler, TimeSeriesDatum } from './types'
 
-export const useHandleHoverData = (defaultData?: TimeSeriesDatum | undefined) => {
-  const [latestValue, setLatestValue] = useState<number | undefined>()
+export const useHandleHoverData = (defaultData?: { value: TimeSeriesDatum['value'] } | undefined) => {
+  const [latestValue, setLatestValue] = useState<TimeSeriesDatum['value'] | undefined>()
   const [valueLabel, setValueLabel] = useState<string | undefined>()
   const value = latestValue ?? defaultData?.value
 
@@ -16,7 +16,7 @@ export const useHandleHoverData = (defaultData?: TimeSeriesDatum | undefined) =>
     setValueLabel(time ? unixToDate(time, 'MMM D, YYYY') : '')
   }, [])
 
-  return { value, valueLabel, handleHoverData }
+  return { value, valueLabel, handleHoverData, setLatestValue, setValueLabel }
 }
 
 const ChartLabel = ({

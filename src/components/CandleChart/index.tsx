@@ -1,17 +1,17 @@
-import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from 'react'
-import { createChart, IChartApi } from 'lightweight-charts'
+import Card from 'components/Card'
 import { RowBetween } from 'components/Row'
-import Card from '../Card'
-import styled from 'styled-components/macro'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import useTheme from 'hooks/useTheme'
+import { createChart, CrosshairMode, IChartApi } from 'lightweight-charts'
+import React, { Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
 
 dayjs.extend(utc)
 
 const Wrapper = styled(Card)`
   width: 100%;
-  padding: 1rem;
+  padding: 3px;
   display: flex;
   background-color: ${({ theme }) => theme.bg0};
   flex-direction: column;
@@ -49,13 +49,12 @@ const CandleChart = ({
   ...rest
 }: LineChartProps) => {
   const theme = useTheme()
-  const textColor = theme.text3
   const chartRef = useRef<HTMLDivElement>(null)
   const [chartCreated, setChart] = useState<IChartApi | undefined>()
 
   const handleResize = useCallback(() => {
     if (chartCreated && chartRef?.current?.parentElement) {
-      chartCreated.resize(chartRef.current.parentElement.clientWidth - 32, height)
+      chartCreated.resize(chartRef.current.parentElement.clientWidth - 0, height)
       chartCreated.timeScale().fitContent()
       chartCreated.timeScale().scrollToPosition(0, false)
     }
@@ -76,10 +75,10 @@ const CandleChart = ({
     if (!chartCreated && data && !!chartRef?.current?.parentElement) {
       const chart = createChart(chartRef.current, {
         height: height,
-        width: chartRef.current.parentElement.clientWidth - 32,
+        width: chartRef.current.parentElement.clientWidth - 0,
         layout: {
           backgroundColor: 'transparent',
-          textColor: '#565A69',
+          textColor: '#666',
           fontFamily: 'Inter var',
         },
         rightPriceScale: {
@@ -87,38 +86,48 @@ const CandleChart = ({
             top: 0.1,
             bottom: 0.1,
           },
-          borderVisible: false,
+          borderVisible: true,
+          borderColor: 'rgba(255,255,255,0.20)',
         },
         timeScale: {
-          borderVisible: false,
-          secondsVisible: true,
-          tickMarkFormatter: (unixTime: number) => {
-            return dayjs.unix(unixTime).format('MM/DD h:mm A')
-          },
+          borderVisible: true,
+          borderColor: 'rgba(255,255,255,0.20)',
+
+          timeVisible: true,
+          // secondsVisible: true,
+          // tickMarkFormatter: (unixTime: number) => {
+          //   return dayjs.unix(unixTime).format('MM/DD h:mm A')
+          // },
         },
         watermark: {
           visible: false,
         },
         grid: {
           horzLines: {
-            visible: false,
+            visible: true,
+            color: 'rgba(255,255,255,0.05)',
           },
           vertLines: {
-            visible: false,
+            visible: true,
+            color: 'rgba(255,255,255,0.05)',
           },
         },
         crosshair: {
           horzLine: {
-            visible: false,
-            labelVisible: false,
+            visible: true,
+            labelVisible: true,
+            style: 3,
+            width: 1,
+            color: 'rgba(255,255,255,0.30)',
+            labelBackgroundColor: color,
           },
-          mode: 1,
+          mode: CrosshairMode.Magnet,
           vertLine: {
             visible: true,
             labelVisible: false,
             style: 3,
             width: 1,
-            color: '#505050',
+            color: 'rgba(255,255,255,0.30)',
             labelBackgroundColor: color,
           },
         },
@@ -127,7 +136,7 @@ const CandleChart = ({
       chart.timeScale().fitContent()
       setChart(chart)
     }
-  }, [color, chartCreated, data, height, setValue, textColor, theme])
+  }, [color, chartCreated, data, height, setValue, theme])
 
   useEffect(() => {
     if (chartCreated && data) {
