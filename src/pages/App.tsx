@@ -14,10 +14,11 @@ import Popups from '../components/Popups'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Home from './Home'
 import PoolPage from './Pool/PoolPage'
+import PoolPageOriginal from './Pool/PoolPage_original'
 import PoolsOverview from './Pool/PoolsOverview'
 import { RedirectToTier0 } from './Tier/redirects'
 import TierPage from './Tier/TierPage'
-import TierPage2 from './Tier/TierPage/index2'
+import TierPageOriginal from './Tier/TierPage_original'
 import TiersOverview from './Tier/TiersOverview'
 import { RedirectInvalidToken } from './Token/redirects'
 import TokensOverview from './Token/TokensOverview'
@@ -161,9 +162,11 @@ export default function App() {
             <BodyWrapper warningActive={showNotSyncedWarning}>
               <Popups />
               <Switch>
-                {/* FIXME:  temp adding a test tier page  */}
-                <Route exact strict path="/:networkID?/pools/:poolId/tiers-original/:tierId" component={TierPage} />
-                <Route exact strict path="/:networkID?/pools/:poolId/tiers/:tierId" component={TierPage2} />
+                {/* TODO: Old pages pending to delete  */}
+                <Route exact strict path="/:networkID?/pools/:poolId/tiers-0/:tierId" component={TierPageOriginal} />
+                <Route exact strict path="/:networkID?/pools-0/:poolId" component={PoolPageOriginal} />
+
+                <Route exact strict path="/:networkID?/pools/:poolId/tiers/:tierId" component={TierPage} />
                 <Route exact strict path="/:networkID?/pools/:poolId/tiers" component={RedirectToTier0} />
                 <Route exact strict path="/:networkID?/tiers" component={TiersOverview} />
                 <Route exact strict path="/:networkID?/pools/:poolId" component={PoolPage} />
