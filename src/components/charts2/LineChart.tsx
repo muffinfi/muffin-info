@@ -7,7 +7,7 @@ import { darken } from 'polished'
 import React, { memo, ReactNode } from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import styled from 'styled-components/macro'
-import { formatDollarAmount } from 'utils/numbers'
+import { formatAmount, formatDollarAmount } from 'utils/numbers'
 import { TimeSeriesDataHandler, TimeSeriesDatum } from './types'
 
 dayjs.extend(utc)
@@ -25,6 +25,7 @@ const Wrapper = styled(Card)`
 
 export type LineChartProps = {
   data: TimeSeriesDatum[]
+  isDollar?: boolean
   color?: string | undefined
   height?: number | undefined
   onHoverData?: TimeSeriesDataHandler | undefined
@@ -36,6 +37,7 @@ export type LineChartProps = {
 
 function Chart({
   data,
+  isDollar = true,
   color = '#56B2A4',
   height,
   onHoverData,
@@ -46,6 +48,7 @@ function Chart({
   ...rest
 }: LineChartProps) {
   const theme = useTheme()
+  const formatYAxisTick = isDollar ? formatDollarAmount : formatAmount
 
   return (
     <Wrapper {...rest} height={height}>
@@ -78,7 +81,7 @@ function Chart({
           <YAxis
             dataKey="value"
             orientation="right"
-            tickFormatter={(value) => formatDollarAmount(value)}
+            tickFormatter={(value) => formatYAxisTick(value)}
             axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
             tickLine={{ stroke: 'rgba(255,255,255,0.1)' }}
             // tick={{ fill: theme.text2 }}

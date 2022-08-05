@@ -3,7 +3,7 @@ import { MonoSpace } from 'components/shared'
 import React, { useCallback, useState } from 'react'
 import { TYPE } from 'theme'
 import { unixToDate } from 'utils/date'
-import { formatDollarAmount } from 'utils/numbers'
+import { formatAmount, formatDollarAmount } from 'utils/numbers'
 import { TimeSeriesDataHandler, TimeSeriesDatum } from './types'
 
 export const useHandleHoverData = (defaultData?: { value: TimeSeriesDatum['value'] } | undefined) => {
@@ -23,16 +23,19 @@ const ChartLabel = ({
   value,
   valueUnit,
   valueLabel,
+  isDollar = true,
 }: {
   value: number | undefined
   valueUnit: string | undefined
   valueLabel: string | undefined
+  isDollar?: boolean
 }) => {
+  const formatValue = isDollar ? formatDollarAmount : formatAmount
   return (
     <AutoColumn>
       <TYPE.label fontSize="24px" minHeight="30px">
         <MonoSpace>
-          {value != null ? formatDollarAmount(value) : ''} {valueUnit}
+          {value != null ? formatValue(value) : ''} {valueUnit}
         </MonoSpace>
       </TYPE.label>
       <TYPE.main minHeight="20px" fontSize="12px">
