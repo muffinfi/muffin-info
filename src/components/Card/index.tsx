@@ -76,10 +76,10 @@ export const GreyBadge = styled(Card)`
 export const ChartCard = styled(Card)<{ minHeight?: number }>`
   display: flex;
   padding: 1rem;
-  background-color: ${({ theme }) => theme.bg0}
+  background-color: ${({ theme }) => theme.bg0};
   flex-direction: column;
   gap: 1rem;
-  min-height: ${({ minHeight = 300 }) => `${minHeight}px`}
+  min-height: ${({ minHeight = 300 }) => `${minHeight}px`};
   > * {
     font-size: 1rem;
   }
