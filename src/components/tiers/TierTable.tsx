@@ -28,12 +28,11 @@ const ResponsiveGrid = styled.div`
   grid-gap: 1em;
   align-items: center;
 
-  grid-template-columns: 20px 1.5fr 2fr repeat(3, 1fr);
+  grid-template-columns: 20px 3.5fr repeat(3, 1fr);
 
   @media screen and (max-width: 900px) {
     grid-template-columns: 20px 1.5fr repeat(2, 1fr);
-    & > :nth-child(4),
-    & > :nth-child(6) {
+    & > :nth-child(3) {
       display: none;
     }
   }
@@ -41,7 +40,7 @@ const ResponsiveGrid = styled.div`
   @media screen and (max-width: 480px) {
     grid-template-columns: 2.5fr repeat(1, 1fr);
     & > :nth-child(1),
-    & > :nth-child(3) {
+    & > :nth-child(5) {
       display: none;
     }
   }
@@ -55,11 +54,9 @@ const LinkWrapper = styled(Link)`
   }
 `
 
-type TierDataKey = keyof TierData
-
 const SORT_FIELD = {
-  pool: 'token0.symbol + token1.symbol + feeTier',
-  feeTier: 'feeTier',
+  poolTier: 'token0.symbol + token1.symbol + feeTier',
+  // feeTier: 'feeTier',
   volumeUSD: 'volumeUSD',
   tvlUSD: 'tvlUSD',
   volumeUSDWeek: 'volumeUSDWeek',
@@ -75,14 +72,15 @@ const DataRow = ({ tierData, index }: { tierData: TierData; index: number }) => 
         <Label fontWeight={400}>
           <RowFixed>
             <DoubleCurrencyLogo address0={tierData.pool.token0.address} address1={tierData.pool.token1.address} />
-            <TYPE.label ml="8px" style={{ whiteSpace: 'nowrap' }}>
+            <TYPE.label ml="8px" mr="8px" style={{ whiteSpace: 'nowrap' }}>
               <HoverInlineText text={`${tierData.pool.token0.symbol} / ${tierData.pool.token1.symbol}`} />
             </TYPE.label>
+            <GreyBadge fontSize="14px">{feeTierPercent(tierData.feeTier)}</GreyBadge>
           </RowFixed>
         </Label>
-        <Label fontWeight={400}>
+        {/* <Label fontWeight={400}>
           <GreyBadge fontSize="14px">{feeTierPercent(tierData.feeTier)}</GreyBadge>
-        </Label>
+        </Label> */}
         <Label end={1} fontWeight={400}>
           {formatDollarAmount(tierData.tvlUSD)}
         </Label>
@@ -164,12 +162,12 @@ export default function TierTable({ tierDatas, maxItems = MAX_ITEMS }: { tierDat
         <AutoColumn gap="16px">
           <ResponsiveGrid>
             <Label color={theme.text2}>#</Label>
-            <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.pool)}>
-              Pool {arrow(SORT_FIELD.pool)}
+            <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.poolTier)}>
+              Tier {arrow(SORT_FIELD.poolTier)}
             </ClickableText>
-            <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
+            {/* <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
               Tier {arrow(SORT_FIELD.feeTier)}
-            </ClickableText>
+            </ClickableText> */}
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
               TVL {arrow(SORT_FIELD.tvlUSD)}
             </ClickableText>
