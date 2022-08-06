@@ -43,42 +43,53 @@ interface TierChartsProps {
 export default function TierCharts({ tierKey, color, activeNetwork, tierData }: TierChartsProps) {
   const chartData = useTierChartData(tierKey)
 
-  const { formattedTvlData, formattedVolumeData, formattedFeesUSD } = useMemo(() => {
-    const formattedTvlData: TimeSeriesDatum[] = []
-    const formattedVolumeData: TimeSeriesDatum[] = []
-    const formattedFeesUSD: TimeSeriesDatum[] = []
+  // chart data
+  const { tvlData, volumeData, feesUSD } = useMemo(() => {
+    const tvlData: TimeSeriesDatum[] = []
+    const volumeData: TimeSeriesDatum[] = []
+    const feesUSD: TimeSeriesDatum[] = []
     if (chartData) {
       chartData.forEach((day) => {
-        formattedTvlData.push({ time: day.date, value: day.totalValueLockedUSD })
-        formattedVolumeData.push({ time: day.date, value: day.volumeUSD })
-        formattedFeesUSD.push({ time: day.date, value: day.feesUSD })
+        tvlData.push({
+          time: day.date,
+          value: day.totalValueLockedUSD,
+        })
+        volumeData.push({
+          time: day.date,
+          value: day.volumeUSD,
+        })
+        feesUSD.push({
+          time: day.date,
+          value: day.feesUSD,
+        })
       })
     }
-    return { formattedTvlData, formattedVolumeData, formattedFeesUSD }
+    return { tvlData, volumeData, feesUSD }
   }, [chartData])
 
   // price data
   const [isToken0Base, toggleBase] = useToggle(true)
-  const formattedPriceData = useMemo(() => {
-    const formattedPriceData: TimeSeriesDatum[] = []
+  const priceData = useMemo(() => {
+    const priceData: TimeSeriesDatum[] = []
     if (chartData) {
       chartData.forEach((day) => {
-        formattedPriceData.push({
+        priceData.push({
           time: day.date,
           value: isToken0Base ? day.token1Price : day.token0Price,
         })
       })
     }
-    return formattedPriceData
+    return priceData
   }, [chartData, isToken0Base])
 
   const symbolBase = isToken0Base ? tierData.pool.token0.symbol : tierData.pool.token1.symbol
   const symbolQuote = isToken0Base ? tierData.pool.token1.symbol : tierData.pool.token0.symbol
 
-  const tvlHandler = useHandleHoverData(formattedTvlData[formattedTvlData.length - 1]?.value)
-  const volumeHandler = useHandleHoverData(formattedVolumeData[formattedVolumeData.length - 1]?.value)
-  const feesHandler = useHandleHoverData(formattedFeesUSD[formattedFeesUSD.length - 1]?.value)
-  const priceHandler = useHandleHoverData(formattedPriceData[formattedPriceData.length - 1]?.value)
+  // chart label setters
+  const tvlHandler = useHandleHoverData(tvlData[tvlData.length - 1]?.value)
+  const volumeHandler = useHandleHoverData(volumeData[volumeData.length - 1]?.value)
+  const feesHandler = useHandleHoverData(feesUSD[feesUSD.length - 1]?.value)
+  const priceHandler = useHandleHoverData(priceData[priceData.length - 1]?.value)
 
   if (chartData == null)
     return (
@@ -92,19 +103,19 @@ export default function TierCharts({ tierKey, color, activeNetwork, tierData }: 
       <DarkGreyCard>
         Volume 24h
         <ChartLabel value={volumeHandler.value} valueUnit={'USD'} valueLabel={volumeHandler.valueLabel} />
-        <BarChart data={formattedVolumeData} color={color} height={260} onHoverData={volumeHandler.handleHoverData} />
+        <BarChart data={volumeData} color={color} height={270} onHoverData={volumeHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
         TVL
         <ChartLabel value={tvlHandler.value} valueUnit={'USD'} valueLabel={tvlHandler.valueLabel} />
-        <LineChart data={formattedTvlData} color={color} height={260} onHoverData={tvlHandler.handleHoverData} />
+        <LineChart data={tvlData} color={color} height={270} onHoverData={tvlHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
         Fees 24h
         <ChartLabel value={feesHandler.value} valueUnit={'USD'} valueLabel={feesHandler.valueLabel} />
-        <BarChart data={formattedFeesUSD} color={color} height={260} onHoverData={feesHandler.handleHoverData} />
+        <BarChart data={feesUSD} color={color} height={270} onHoverData={feesHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
@@ -121,10 +132,10 @@ export default function TierCharts({ tierKey, color, activeNetwork, tierData }: 
           <SmallOptionButton onClick={toggleBase}>Use {symbolQuote} as base</SmallOptionButton>
         </RowBetween>
         <LineChart
-          data={formattedPriceData}
+          data={priceData}
           isDollar={false}
           color={color}
-          height={260}
+          height={270}
           onHoverData={priceHandler.handleHoverData}
         />
       </DarkGreyCard>

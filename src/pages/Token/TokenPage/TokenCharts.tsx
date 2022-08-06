@@ -44,22 +44,26 @@ export default function TokenCharts({
 }) {
   const chartData = useTokenChartData(address)
 
-  const { formattedTvlData, formattedVolumeData } = useMemo(() => {
-    const formattedTvlData: TimeSeriesDatum[] = []
-    const formattedVolumeData: TimeSeriesDatum[] = []
+  // chart data
+  const { tvlData, volumeData } = useMemo(() => {
+    const tvlData: TimeSeriesDatum[] = []
+    const volumeData: TimeSeriesDatum[] = []
     if (chartData) {
       chartData.forEach((day) => {
-        formattedTvlData.push({ time: day.date, value: day.totalValueLockedUSD })
-        formattedVolumeData.push({ time: day.date, value: day.volumeUSD })
+        tvlData.push({
+          time: day.date,
+          value: day.totalValueLockedUSD,
+        })
+        volumeData.push({
+          time: day.date,
+          value: day.volumeUSD,
+        })
       })
     }
-    return { formattedTvlData, formattedVolumeData }
+    return { tvlData, volumeData }
   }, [chartData])
 
-  const tvlHandler = useHandleHoverData(formattedTvlData[formattedTvlData.length - 1]?.value)
-  const volumeHandler = useHandleHoverData(formattedVolumeData[formattedVolumeData.length - 1]?.value)
-
-  // pricing data
+  // price chart data
   const [timeWindow] = useState(DEFAULT_TIME_WINDOW)
   const priceData = useTokenPriceData(address, ONE_HOUR_SECONDS, timeWindow)
   const adjustedToCurrent = useMemo(() => {
@@ -77,6 +81,10 @@ export default function TokenCharts({
       return undefined
     }
   }, [priceData, tokenData])
+
+  // chart label setters
+  const tvlHandler = useHandleHoverData(tvlData[tvlData.length - 1]?.value)
+  const volumeHandler = useHandleHoverData(volumeData[volumeData.length - 1]?.value)
   const [priceLatestValue, setPriceLatestValue] = useState<number | undefined>()
   const [priceValueLabel, setPriceValueLabel] = useState<string | undefined>()
 
@@ -113,13 +121,13 @@ export default function TokenCharts({
       <DarkGreyCard>
         Volume 24h
         <ChartLabel value={volumeHandler.value} valueUnit={'USD'} valueLabel={volumeHandler.valueLabel} />
-        <BarChart data={formattedVolumeData} color={color} height={260} onHoverData={volumeHandler.handleHoverData} />
+        <BarChart data={volumeData} color={color} height={270} onHoverData={volumeHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
         TVL
         <ChartLabel value={tvlHandler.value} valueUnit={'USD'} valueLabel={tvlHandler.valueLabel} />
-        <LineChart data={formattedTvlData} color={color} height={260} onHoverData={tvlHandler.handleHoverData} />
+        <LineChart data={tvlData} color={color} height={270} onHoverData={tvlHandler.handleHoverData} />
       </DarkGreyCard>
     </Layout>
   )
