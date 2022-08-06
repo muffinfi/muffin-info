@@ -61,12 +61,12 @@ function Chart({
   const theme = useTheme()
   const colors = useMemo(
     () => [
-      color ?? '#2172E5', //
-      theme.yellow1,
+      color ?? theme.blue1, //
+      theme.yellow3,
       theme.red1,
       theme.green1,
+      theme.pink1,
       theme.yellow2,
-      theme.red2,
     ],
     [theme, color]
   )

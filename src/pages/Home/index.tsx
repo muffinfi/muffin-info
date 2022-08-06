@@ -1,6 +1,4 @@
 import { DarkGreyCard } from 'components/Card'
-import ProtocolTvlChart from './ProtocolTvlChart'
-import ProtocolVolumeChart from './ProtocolVolumeChart'
 import { AutoColumn } from 'components/Column'
 import Percent from 'components/Percent'
 import PoolTable from 'components/pools/PoolTable'
@@ -8,7 +6,7 @@ import { ResponsiveRow, RowBetween, RowFixed } from 'components/Row'
 import TierTable from 'components/tiers/TierTable'
 import TokenTable from 'components/tokens/TokenTable'
 import useTheme from 'hooks/useTheme'
-import { PageWrapper, ThemedBackgroundGlobal } from 'pages/styled'
+import { PageWrapper } from 'pages/styled'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { useAllPoolData } from 'state/pools/hooks'
@@ -21,6 +19,8 @@ import { notEmpty } from 'utils'
 import { formatDollarAmount } from 'utils/numbers'
 import TransactionsTable from '../../components/TransactionsTable'
 import { HideMedium, HideSmall, StyledInternalLink } from '../../theme/components'
+import ProtocolTvlChart from './ProtocolTvlChart'
+import ProtocolVolumeChart from './ProtocolVolumeChart'
 
 const ChartWrapper = styled.div`
   width: 49%;
@@ -83,7 +83,6 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <ThemedBackgroundGlobal backgroundColor={activeNetwork.bgColor} />
       <AutoColumn gap="16px">
         <TYPE.main>Muffin Overview</TYPE.main>
         <ResponsiveRow>

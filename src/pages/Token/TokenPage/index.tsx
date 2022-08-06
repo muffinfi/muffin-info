@@ -108,8 +108,8 @@ export default function TokenPage({
   address = address.toLowerCase()
 
   // theming
-  const backgroundColor = useColor(address)
   const theme = useTheme()
+  const backgroundColor = useColor(address, theme.primary1)
 
   // scroll on page view
   useEffect(() => {

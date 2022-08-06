@@ -34,7 +34,7 @@ const Wrapper = styled(Row)`
   width: 500px;
   height: 38px;
   border-radius: 20px;
-  positon: relative;
+  position: relative;
   z-index: 9999;
 
   @media (max-width: 1080px) {
@@ -83,7 +83,7 @@ const Menu = styled.div<{ hide: boolean }>`
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.04);
   display: ${({ hide }) => hide && 'none'};
-  border: 1px solid ${({ theme }) => theme.pink1};
+  border: 1px solid ${({ theme }) => theme.bg0};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: absolute;
@@ -122,7 +122,7 @@ const Break = styled.div`
 `
 
 const HoverText = styled.div<{ hide?: boolean | undefined }>`
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.secondary1};
   display: ${({ hide = false }) => hide && 'none'};
   :hover {
     cursor: pointer;
@@ -147,8 +147,8 @@ const OptionButton = styled.div<{ enabled: boolean }>`
   margin-right: 10px;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme, enabled }) => (enabled ? theme.pink1 : 'transparent')};
-  color: ${({ theme, enabled }) => (enabled ? theme.white : theme.pink1)};
+  background-color: ${({ theme, enabled }) => (enabled ? theme.primary1 : 'transparent')};
+  color: ${({ theme, enabled }) => (enabled ? theme.white : theme.primary1)};
   :hover {
     opacity: 0.6;
     cursor: pointer;

@@ -98,7 +98,7 @@ const DataRow = ({ transaction, color }: { transaction: Transaction; color?: str
   return (
     <ResponsiveGrid>
       <ExternalLink href={getEtherscanLink(1, transaction.hash, 'transaction', activeNetwork)}>
-        <Label color={color ?? theme.blue1} fontWeight={400}>
+        <Label color={color ?? theme.secondary1} fontWeight={400}>
           {transaction.type === TransactionType.MINT
             ? `Add ${transaction.token0Symbol} and ${transaction.token1Symbol}`
             : transaction.type === TransactionType.SWAP
@@ -118,7 +118,7 @@ const DataRow = ({ transaction, color }: { transaction: Transaction; color?: str
       <Label end={1} fontWeight={400}>
         <ExternalLink
           href={getEtherscanLink(1, transaction.sender, 'address', activeNetwork)}
-          style={{ color: color ?? theme.blue1 }}
+          style={{ color: color ?? theme.secondary1 }}
         >
           {shortenAddress(transaction.sender)}
         </ExternalLink>
@@ -274,7 +274,9 @@ export default function TransactionTable({
               setPage(page === 1 ? page : page - 1)
             }}
           >
-            <Arrow faded={page === 1 ? true : false}>←</Arrow>
+            <Arrow color={color} faded={page === 1 ? true : false}>
+              ←
+            </Arrow>
           </div>
           <TYPE.body>{'Page ' + page + ' of ' + maxPage}</TYPE.body>
           <div
@@ -282,7 +284,9 @@ export default function TransactionTable({
               setPage(page === maxPage ? page : page + 1)
             }}
           >
-            <Arrow faded={page === maxPage ? true : false}>→</Arrow>
+            <Arrow color={color} faded={page === maxPage ? true : false}>
+              →
+            </Arrow>
           </div>
         </PageButtons>
       </AutoColumn>

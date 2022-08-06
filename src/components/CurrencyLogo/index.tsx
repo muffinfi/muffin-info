@@ -94,11 +94,11 @@ export default function CurrencyLogo({
     if (checkSummed && address) {
       const override = tempSources[address]
       return [
+        ...uriLocationsRinkeby,
         ...(activeNetwork === EthereumNetworkInfo ? [getTokenLogoURL(checkSummed)] : []),
         ...uriLocationsOptimism,
         ...uriLocationsArbitrum,
         ...uriLocationsPOlygon,
-        ...uriLocationsRinkeby,
         ...(activeNetwork === EthereumNetworkInfo ? [] : [getTokenLogoURL(checkSummed)]),
         override,
       ]

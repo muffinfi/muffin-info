@@ -22,7 +22,7 @@ const Legend = ({ labels, colors }: { labels: string[]; colors: string[] }) => {
     <LegendRow>
       {labels.map((label, i) => (
         <Row key={i}>
-          <span style={{ color: transparentize(0.4, colors[i % colors.length]) }}>●&nbsp;</span>
+          <span style={{ color: transparentize(0.3, colors[i % colors.length]) }}>●&nbsp;</span>
           <span>{label}</span>
         </Row>
       ))}

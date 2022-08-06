@@ -55,12 +55,12 @@ const Chart = ({
   const theme = useTheme()
   const colors = useMemo(
     () => [
-      color ?? '#2172E5', //
-      theme.yellow1,
+      color ?? theme.blue1, //
+      theme.yellow3,
       theme.red1,
       theme.green1,
+      theme.pink1,
       theme.yellow2,
-      theme.red2,
     ],
     [theme, color]
   )
@@ -111,7 +111,7 @@ const Chart = ({
               key={i}
               stackId="1"
               dataKey={(datum: MergedTimeSeriesDatum) => datum.values[i]}
-              fill={transparentize(0.2, colors[i % colors.length])}
+              fill={transparentize(0.0, colors[i % colors.length])}
               // shape={(props_: { x: number; y: number; width: number; height: number }) => (
               //   <g>
               //     <rect

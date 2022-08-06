@@ -1,17 +1,13 @@
-import { useState, useLayoutEffect, useMemo } from 'react'
-import { shade } from 'polished'
-import Vibrant from 'node-vibrant'
-import { hex } from 'wcag-contrast'
 import { Token } from '@uniswap/sdk-core'
-import uriToHttp from 'utils/uriToHttp'
+import Vibrant from 'node-vibrant'
+import { shade } from 'polished'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import { isAddress } from 'utils'
-import { SupportedChainId } from 'constants/chains'
+import uriToHttp from 'utils/uriToHttp'
+import { hex } from 'wcag-contrast'
+import useTheme from './useTheme'
 
 async function getColorFromToken(token: Token): Promise<string | null> {
-  if (token.chainId === SupportedChainId.RINKEBY && token.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
-    return Promise.resolve('#FAAB14')
-  }
-
   const path = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
 
   return Vibrant.from(path)
@@ -45,8 +41,11 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
     .catch(() => null)
 }
 
-export function useColor(address?: string) {
-  const [color, setColor] = useState('#2172E5')
+export function useColor(address?: string, defaultColor?: string) {
+  const theme = useTheme()
+  const defaultColor_ = defaultColor ?? theme.secondary1
+
+  const [color, setColor] = useState(defaultColor_)
 
   const formattedAddress = isAddress(address)
 
@@ -67,15 +66,16 @@ export function useColor(address?: string) {
 
     return () => {
       stale = true
-      setColor('#2172E5')
+      setColor(defaultColor_)
     }
-  }, [token])
+  }, [token, defaultColor_])
 
   return color
 }
 
 export function useListColor(listImageUri?: string) {
-  const [color, setColor] = useState('#2172E5')
+  const theme = useTheme()
+  const [color, setColor] = useState(theme.secondary1)
 
   useLayoutEffect(() => {
     let stale = false
@@ -90,9 +90,9 @@ export function useListColor(listImageUri?: string) {
 
     return () => {
       stale = true
-      setColor('#2172E5')
+      setColor(theme.secondary1)
     }
-  }, [listImageUri])
+  }, [listImageUri, theme.secondary1])
 
   return color
 }
