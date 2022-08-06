@@ -1,6 +1,6 @@
 import { DarkGreyCard } from 'components/Card'
-import ProtocolTvlChart from 'components/charts/ProtocolTvlChart'
-import ProtocolVolumeChart from 'components/charts/ProtocolVolumeChart'
+import ProtocolTvlChart from './ProtocolTvlChart'
+import ProtocolVolumeChart from './ProtocolVolumeChart'
 import { AutoColumn } from 'components/Column'
 import Percent from 'components/Percent'
 import PoolTable from 'components/pools/PoolTable'
@@ -88,10 +88,10 @@ export default function Home() {
         <TYPE.main>Muffin Overview</TYPE.main>
         <ResponsiveRow>
           <ChartWrapper>
-            <ProtocolTvlChart height={220} minHeight={300} color={activeNetwork.primaryColor} />
+            <ProtocolTvlChart height={220} color={activeNetwork.primaryColor} />
           </ChartWrapper>
           <ChartWrapper>
-            <ProtocolVolumeChart height={220} minHeight={300} color={theme.blue1} />
+            <ProtocolVolumeChart height={220} color={theme.blue1} />
           </ChartWrapper>
         </ResponsiveRow>
         <HideSmall>

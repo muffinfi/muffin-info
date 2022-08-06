@@ -127,7 +127,7 @@ function Chart({
               stackId={stack ? '1' : undefined}
               dataKey={(datum: MergedTimeSeriesDatum) => datum.values[i]}
               type="monotone"
-              stroke={transparentize(0.2, colors[i % colors.length])}
+              stroke={transparentize(0, colors[i % colors.length])}
               fill={stack ? `url(#gradient-${i % colors.length})` : 'rgba(0,0,0,0)'}
               strokeWidth={dataList.length > 1 ? 1 : 2}
               isAnimationActive={false}

@@ -78,7 +78,7 @@ export const ChartCard = styled(Card)<{ minHeight?: number }>`
   padding: 1rem;
   background-color: ${({ theme }) => theme.bg0};
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.2rem;
   min-height: ${({ minHeight = 300 }) => `${minHeight}px`};
   > * {
     font-size: 1rem;
