@@ -1,12 +1,20 @@
+import { SmallOptionButton } from 'components/Button'
 import { DarkGreyCard } from 'components/Card'
-import BarChart from 'components/charts2/BarChart'
-import ChartLabel, { useHandleHoverData } from 'components/charts2/ChartLabel'
-import LineChart from 'components/charts2/LineChart'
-import { TimeSeriesDatum } from 'components/charts2/types'
+import BarChart2 from 'components/charts2/BarChart2'
+import ChartLabel, { useHandleHoverData2 } from 'components/charts2/ChartLabel'
+import LineChart2 from 'components/charts2/LineChart2'
+import { TimeSeriesDatum, TimeSeriesHoverHandler } from 'components/charts2/types'
+import { AutoColumn } from 'components/Column'
 import Loader from 'components/Loader'
-import React, { useMemo } from 'react'
-import { usePoolChartData } from 'state/pools/hooks'
+import { RowBetween } from 'components/Row'
+import useToggle from 'hooks/useToggle'
+import React, { useCallback, useMemo, useState } from 'react'
+import { PoolData } from 'state/pools/reducer'
+import { useTierChartDataList } from 'state/tiers/hooks'
+import { normalizeKey } from 'state/tiers/utils'
 import styled from 'styled-components/macro'
+import { feeTierPercent } from 'utils'
+import { unixToDate } from 'utils/date'
 
 const Layout = styled.div`
   display: grid;
@@ -25,29 +33,91 @@ const Layout = styled.div`
 //   `};
 // `
 
-export default function PoolCharts3({ poolId, color }: { poolId: string; color: string }) {
-  const chartData = usePoolChartData(poolId)
+const sumLastValues = (dataList: TimeSeriesDatum[][]) => {
+  return dataList
+    .map((data) => data[data.length - 1]?.value) //
+    .reduce((acc, cur) => (acc ?? 0) + (cur ?? 0))
+}
 
-  const { formattedTvlData, formattedVolumeData, formattedFeesUSD } = useMemo(() => {
-    const formattedTvlData: TimeSeriesDatum[] = []
-    const formattedVolumeData: TimeSeriesDatum[] = []
-    const formattedFeesUSD: TimeSeriesDatum[] = []
+const findValueOfMaxWeight = (xs: (number | undefined)[], ws: (number | undefined)[]) => {
+  let x: number | undefined
+  let maxW = 0
+  let i = 0
+  for (; i < xs.length; i++) {
+    const w = ws[i] ?? 0
+    if (w >= maxW) {
+      x = xs[i]
+      maxW = w
+    }
+  }
+  return { value: x, weight: maxW, index: i }
+}
 
-    if (!chartData) return { formattedTvlData, formattedVolumeData, formattedFeesUSD }
+const useHandleHoverPriceData = (priceDataList: TimeSeriesDatum[][]) => {
+  const [latestValue, setLatestValue] = useState<number | undefined>()
+  const [valueLabel, setValueLabel] = useState<string | undefined>()
+  const defaultValue = useMemo(
+    () =>
+      findValueOfMaxWeight(
+        priceDataList.map((data) => data[data.length - 1]?.value),
+        priceDataList.map((data) => data[data.length - 1]?.metadata)
+      ).value,
+    [priceDataList]
+  )
+  const value = latestValue ?? defaultValue
 
-    chartData.forEach((day) => {
-      formattedTvlData.push({ time: day.date, value: day.totalValueLockedUSD })
-      formattedVolumeData.push({ time: day.date, value: day.volumeUSD })
-      formattedFeesUSD.push({ time: day.date, value: day.feesUSD })
+  const handleHoverData: TimeSeriesHoverHandler = useCallback((datum) => {
+    setLatestValue(datum ? findValueOfMaxWeight(datum.values, datum.metadatas).value : undefined)
+    setValueLabel(datum?.time ? unixToDate(datum.time, 'MMM D, YYYY') : '')
+  }, [])
+
+  return { value, valueLabel, handleHoverData }
+}
+
+export default function PoolCharts({ poolData }: { poolData: PoolData }) {
+  const tierKeys = useMemo(() => poolData?.tiers.map((t) => normalizeKey([poolData.poolId, t.tierId])), [poolData])
+  const { loading, chartDataList } = useTierChartDataList(tierKeys)
+
+  const [isToken0Base, toggleBase] = useToggle(true)
+
+  const {
+    formattedTvlDataList,
+    formattedVolumeDataList,
+    formattedFeesDataList,
+    formattedPriceDataList,
+  } = useMemo(() => {
+    const formattedTvlDataList: TimeSeriesDatum[][] = []
+    const formattedVolumeDataList: TimeSeriesDatum[][] = []
+    const formattedFeesDataList: TimeSeriesDatum[][] = []
+    const formattedPriceDataList: TimeSeriesDatum[][] = []
+
+    chartDataList.forEach((tierChartData) => {
+      formattedTvlDataList.push(tierChartData?.map((day) => ({ time: day.date, value: day.totalValueLockedUSD })) ?? [])
+      formattedVolumeDataList.push(tierChartData?.map((day) => ({ time: day.date, value: day.volumeUSD })) ?? [])
+      formattedFeesDataList.push(tierChartData?.map((day) => ({ time: day.date, value: day.feesUSD })) ?? [])
+      formattedPriceDataList.push(
+        tierChartData?.map((day) => ({
+          time: day.date,
+          value: isToken0Base ? day.token1Price : day.token0Price,
+          metadata: day.volumeUSD,
+        })) ?? []
+      )
     })
-    return { formattedTvlData, formattedVolumeData, formattedFeesUSD }
-  }, [chartData])
 
-  const tvlHandler = useHandleHoverData(formattedTvlData[formattedTvlData.length - 1])
-  const volumeHandler = useHandleHoverData(formattedVolumeData[formattedVolumeData.length - 1])
-  const feesHandler = useHandleHoverData(formattedFeesUSD[formattedFeesUSD.length - 1])
+    return { formattedTvlDataList, formattedVolumeDataList, formattedFeesDataList, formattedPriceDataList }
+  }, [chartDataList, isToken0Base])
 
-  if (chartData == null)
+  const tvlHandler2 = useHandleHoverData2(sumLastValues(formattedTvlDataList))
+  const volumeHandler2 = useHandleHoverData2(sumLastValues(formattedVolumeDataList))
+  const feesHandler2 = useHandleHoverData2(sumLastValues(formattedFeesDataList))
+  const priceHandler2 = useHandleHoverPriceData(formattedPriceDataList)
+
+  const feeTierPercents = useMemo(() => poolData?.tiers.map((tier) => feeTierPercent(tier.feeTier)), [poolData])
+
+  const symbolBase = isToken0Base ? poolData.token0.symbol : poolData.token1.symbol
+  const symbolQuote = isToken0Base ? poolData.token1.symbol : poolData.token0.symbol
+
+  if (loading || chartDataList.some((chartData) => chartData == null))
     return (
       <DarkGreyCard>
         <Loader />
@@ -57,21 +127,61 @@ export default function PoolCharts3({ poolId, color }: { poolId: string; color: 
   return (
     <Layout>
       <DarkGreyCard>
-        Volume 24h
-        <ChartLabel value={volumeHandler.value} valueUnit={'USD'} valueLabel={volumeHandler.valueLabel} />
-        <BarChart data={formattedVolumeData} color={color} height={280} onHoverData={volumeHandler.handleHoverData} />
+        Volume 24
+        <ChartLabel value={volumeHandler2.value} valueUnit={'USD'} valueLabel={volumeHandler2.valueLabel} />
+        <BarChart2
+          height={270}
+          data={formattedVolumeDataList}
+          labels={feeTierPercents}
+          onHoverData={volumeHandler2.handleHoverData}
+        />
       </DarkGreyCard>
 
       <DarkGreyCard>
         TVL
-        <ChartLabel value={tvlHandler.value} valueUnit={'USD'} valueLabel={tvlHandler.valueLabel} />
-        <LineChart data={formattedTvlData} color={color} height={280} onHoverData={tvlHandler.handleHoverData} />
+        <ChartLabel value={tvlHandler2.value} valueUnit={'USD'} valueLabel={tvlHandler2.valueLabel} />
+        <LineChart2
+          height={270}
+          data={formattedTvlDataList}
+          labels={feeTierPercents}
+          onHoverData={tvlHandler2.handleHoverData}
+        />
       </DarkGreyCard>
 
       <DarkGreyCard>
         Fees 24h
-        <ChartLabel value={feesHandler.value} valueUnit={'USD'} valueLabel={feesHandler.valueLabel} />
-        <BarChart data={formattedFeesUSD} color={color} height={280} onHoverData={feesHandler.handleHoverData} />
+        <ChartLabel value={feesHandler2.value} valueUnit={'USD'} valueLabel={feesHandler2.valueLabel} />
+        <BarChart2
+          height={270}
+          data={formattedFeesDataList}
+          labels={feeTierPercents}
+          onHoverData={feesHandler2.handleHoverData}
+        />
+      </DarkGreyCard>
+
+      <DarkGreyCard>
+        <RowBetween align="flex-start">
+          <AutoColumn>
+            <span>
+              Price of 1 {symbolBase} <span style={{ color: '#666' }}>of the most traded tier</span>
+            </span>
+            <ChartLabel
+              value={priceHandler2.value}
+              valueUnit={symbolQuote}
+              valueLabel={priceHandler2.valueLabel}
+              isDollar={false}
+            />
+          </AutoColumn>
+          <SmallOptionButton onClick={toggleBase}>Use {symbolQuote} as base</SmallOptionButton>
+        </RowBetween>
+        <LineChart2
+          height={270}
+          data={formattedPriceDataList}
+          labels={feeTierPercents}
+          onHoverData={priceHandler2.handleHoverData}
+          stack={false}
+          fillMissingValueWithZero={false}
+        />
       </DarkGreyCard>
 
       {/* <WideDarkGreyCard>

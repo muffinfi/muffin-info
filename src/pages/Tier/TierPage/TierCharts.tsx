@@ -1,8 +1,8 @@
 import { SmallOptionButton } from 'components/Button'
 import { DarkGreyCard } from 'components/Card'
-import BarChart from 'components/charts2/BarChart'
-import ChartLabel, { useHandleHoverData } from 'components/charts2/ChartLabel'
-import LineChart from 'components/charts2/LineChart'
+import BarChart2 from 'components/charts2/BarChart2'
+import ChartLabel, { useHandleHoverData2 } from 'components/charts2/ChartLabel'
+import LineChart2 from 'components/charts2/LineChart2'
 import { TimeSeriesDatum } from 'components/charts2/types'
 import { AutoColumn } from 'components/Column'
 import DensityChart from 'components/DensityChart/alt'
@@ -40,7 +40,7 @@ interface TierChartsProps {
   tierData: TierData
 }
 
-export default function TierCharts3({ tierKey, color, activeNetwork, tierData }: TierChartsProps) {
+export default function TierCharts({ tierKey, color, activeNetwork, tierData }: TierChartsProps) {
   const chartData = useTierChartData(tierKey)
 
   const { formattedTvlData, formattedVolumeData, formattedFeesUSD } = useMemo(() => {
@@ -75,10 +75,10 @@ export default function TierCharts3({ tierKey, color, activeNetwork, tierData }:
   const symbolBase = isToken0Base ? tierData.pool.token0.symbol : tierData.pool.token1.symbol
   const symbolQuote = isToken0Base ? tierData.pool.token1.symbol : tierData.pool.token0.symbol
 
-  const tvlHandler = useHandleHoverData(formattedTvlData[formattedTvlData.length - 1])
-  const volumeHandler = useHandleHoverData(formattedVolumeData[formattedVolumeData.length - 1])
-  const feesHandler = useHandleHoverData(formattedFeesUSD[formattedFeesUSD.length - 1])
-  const priceHandler = useHandleHoverData(formattedPriceData[formattedPriceData.length - 1])
+  const tvlHandler = useHandleHoverData2(formattedTvlData[formattedTvlData.length - 1]?.value)
+  const volumeHandler = useHandleHoverData2(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+  const feesHandler = useHandleHoverData2(formattedFeesUSD[formattedFeesUSD.length - 1]?.value)
+  const priceHandler = useHandleHoverData2(formattedPriceData[formattedPriceData.length - 1]?.value)
 
   if (chartData == null)
     return (
@@ -92,19 +92,19 @@ export default function TierCharts3({ tierKey, color, activeNetwork, tierData }:
       <DarkGreyCard>
         Volume 24h
         <ChartLabel value={volumeHandler.value} valueUnit={'USD'} valueLabel={volumeHandler.valueLabel} />
-        <BarChart data={formattedVolumeData} color={color} height={280} onHoverData={volumeHandler.handleHoverData} />
+        <BarChart2 data={formattedVolumeData} color={color} height={280} onHoverData={volumeHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
         TVL
         <ChartLabel value={tvlHandler.value} valueUnit={'USD'} valueLabel={tvlHandler.valueLabel} />
-        <LineChart data={formattedTvlData} color={color} height={280} onHoverData={tvlHandler.handleHoverData} />
+        <LineChart2 data={formattedTvlData} color={color} height={280} onHoverData={tvlHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
         Fees 24h
         <ChartLabel value={feesHandler.value} valueUnit={'USD'} valueLabel={feesHandler.valueLabel} />
-        <BarChart data={formattedFeesUSD} color={color} height={280} onHoverData={feesHandler.handleHoverData} />
+        <BarChart2 data={formattedFeesUSD} color={color} height={280} onHoverData={feesHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
@@ -120,7 +120,7 @@ export default function TierCharts3({ tierKey, color, activeNetwork, tierData }:
           </AutoColumn>
           <SmallOptionButton onClick={toggleBase}>Use {symbolQuote} as base</SmallOptionButton>
         </RowBetween>
-        <LineChart
+        <LineChart2
           data={formattedPriceData}
           isDollar={false}
           color={color}

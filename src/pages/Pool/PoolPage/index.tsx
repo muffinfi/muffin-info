@@ -10,7 +10,7 @@ import Row, { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import TierTable from 'components/tiers/TierTable'
 import TransactionTable from 'components/TransactionsTable'
 import { EthereumNetworkInfo } from 'constants/networks'
-import { useColor } from 'hooks/useColor'
+// import { useColor } from 'hooks/useColor'
 import { PageWrapper } from 'pages/styled'
 import React, { useEffect, useMemo } from 'react'
 import { Download } from 'react-feather'
@@ -106,7 +106,7 @@ export default function PoolPage({
   }, [])
 
   // theming
-  const backgroundColor = useColor()
+  // const backgroundColor = useColor()
 
   // token data
   const poolData = usePoolDatas([poolId])[0]
@@ -251,7 +251,7 @@ export default function PoolPage({
         </InfoRow>
 
         {/* Charts */}
-        <PoolCharts poolId={poolId} color={backgroundColor} />
+        <PoolCharts poolData={poolData} />
 
         {/* Tiers table */}
         <TYPE.main fontSize="24px">All tiers</TYPE.main>
