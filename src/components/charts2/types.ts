@@ -1,15 +1,8 @@
-type Time = number
-type Value = number
-
 export type TimeSeriesDatum = {
-  time: Time
-  value: Value
+  time: number
+  value: number
   metadata?: any
 }
-
-export type TimeSeriesDataHandler = (datum: { time: Time | undefined; value: Value | undefined }) => void
-
-// ------
 
 export type MergedTimeSeriesDatum = {
   time: number

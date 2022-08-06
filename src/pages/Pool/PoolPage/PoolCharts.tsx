@@ -1,8 +1,8 @@
 import { SmallOptionButton } from 'components/Button'
 import { DarkGreyCard } from 'components/Card'
-import BarChart2 from 'components/charts2/BarChart2'
-import ChartLabel, { useHandleHoverData2 } from 'components/charts2/ChartLabel'
-import LineChart2 from 'components/charts2/LineChart2'
+import BarChart from 'components/charts2/BarChart'
+import ChartLabel, { useHandleHoverData } from 'components/charts2/ChartLabel'
+import LineChart from 'components/charts2/LineChart'
 import { TimeSeriesDatum, TimeSeriesHoverHandler } from 'components/charts2/types'
 import { AutoColumn } from 'components/Column'
 import Loader from 'components/Loader'
@@ -107,9 +107,9 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
     return { formattedTvlDataList, formattedVolumeDataList, formattedFeesDataList, formattedPriceDataList }
   }, [chartDataList, isToken0Base])
 
-  const tvlHandler2 = useHandleHoverData2(sumLastValues(formattedTvlDataList))
-  const volumeHandler2 = useHandleHoverData2(sumLastValues(formattedVolumeDataList))
-  const feesHandler2 = useHandleHoverData2(sumLastValues(formattedFeesDataList))
+  const tvlHandler2 = useHandleHoverData(sumLastValues(formattedTvlDataList))
+  const volumeHandler2 = useHandleHoverData(sumLastValues(formattedVolumeDataList))
+  const feesHandler2 = useHandleHoverData(sumLastValues(formattedFeesDataList))
   const priceHandler2 = useHandleHoverPriceData(formattedPriceDataList)
 
   const feeTierPercents = useMemo(() => poolData?.tiers.map((tier) => feeTierPercent(tier.feeTier)), [poolData])
@@ -129,7 +129,7 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
       <DarkGreyCard>
         Volume 24
         <ChartLabel value={volumeHandler2.value} valueUnit={'USD'} valueLabel={volumeHandler2.valueLabel} />
-        <BarChart2
+        <BarChart
           height={270}
           data={formattedVolumeDataList}
           labels={feeTierPercents}
@@ -140,7 +140,7 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
       <DarkGreyCard>
         TVL
         <ChartLabel value={tvlHandler2.value} valueUnit={'USD'} valueLabel={tvlHandler2.valueLabel} />
-        <LineChart2
+        <LineChart
           height={270}
           data={formattedTvlDataList}
           labels={feeTierPercents}
@@ -151,7 +151,7 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
       <DarkGreyCard>
         Fees 24h
         <ChartLabel value={feesHandler2.value} valueUnit={'USD'} valueLabel={feesHandler2.valueLabel} />
-        <BarChart2
+        <BarChart
           height={270}
           data={formattedFeesDataList}
           labels={feeTierPercents}
@@ -174,7 +174,7 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
           </AutoColumn>
           <SmallOptionButton onClick={toggleBase}>Use {symbolQuote} as base</SmallOptionButton>
         </RowBetween>
-        <LineChart2
+        <LineChart
           height={270}
           data={formattedPriceDataList}
           labels={feeTierPercents}

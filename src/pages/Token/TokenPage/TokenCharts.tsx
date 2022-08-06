@@ -5,13 +5,13 @@ import ChartLabel, { useHandleHoverData } from 'components/charts2/ChartLabel'
 import LineChart from 'components/charts2/LineChart'
 import { TimeSeriesDatum } from 'components/charts2/types'
 import Loader from 'components/Loader'
+import { ONE_HOUR_SECONDS, TimeWindow } from 'constants/intervals'
 import React, { useMemo, useState } from 'react'
 import { useTokenChartData, useTokenPriceData } from 'state/tokens/hooks'
-import styled from 'styled-components/macro'
-import { ONE_HOUR_SECONDS, TimeWindow } from 'constants/intervals'
 import { TokenData } from 'state/tokens/reducer'
-import { currentTimestamp } from 'utils'
+import styled from 'styled-components/macro'
 import { PriceChartEntry } from 'types'
+import { currentTimestamp } from 'utils'
 
 const Layout = styled.div`
   display: grid;
@@ -56,8 +56,8 @@ export default function TokenCharts({
     return { formattedTvlData, formattedVolumeData }
   }, [chartData])
 
-  const tvlHandler = useHandleHoverData(formattedTvlData[formattedTvlData.length - 1])
-  const volumeHandler = useHandleHoverData(formattedVolumeData[formattedVolumeData.length - 1])
+  const tvlHandler = useHandleHoverData(formattedTvlData[formattedTvlData.length - 1]?.value)
+  const volumeHandler = useHandleHoverData(formattedVolumeData[formattedVolumeData.length - 1]?.value)
 
   // pricing data
   const [timeWindow] = useState(DEFAULT_TIME_WINDOW)
@@ -113,13 +113,13 @@ export default function TokenCharts({
       <DarkGreyCard>
         Volume 24h
         <ChartLabel value={volumeHandler.value} valueUnit={'USD'} valueLabel={volumeHandler.valueLabel} />
-        <BarChart data={formattedVolumeData} color={color} height={280} onHoverData={volumeHandler.handleHoverData} />
+        <BarChart data={formattedVolumeData} color={color} height={260} onHoverData={volumeHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>
         TVL
         <ChartLabel value={tvlHandler.value} valueUnit={'USD'} valueLabel={tvlHandler.valueLabel} />
-        <LineChart data={formattedTvlData} color={color} height={280} onHoverData={tvlHandler.handleHoverData} />
+        <LineChart data={formattedTvlData} color={color} height={260} onHoverData={tvlHandler.handleHoverData} />
       </DarkGreyCard>
     </Layout>
   )

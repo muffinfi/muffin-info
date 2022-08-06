@@ -4,22 +4,9 @@ import React, { useCallback, useState } from 'react'
 import { TYPE } from 'theme'
 import { unixToDate } from 'utils/date'
 import { formatAmount, formatDollarAmount } from 'utils/numbers'
-import { TimeSeriesDataHandler, TimeSeriesDatum, TimeSeriesHoverHandler } from './types'
+import { TimeSeriesHoverHandler } from './types'
 
-export const useHandleHoverData = (defaultData?: { value: TimeSeriesDatum['value'] } | undefined) => {
-  const [latestValue, setLatestValue] = useState<TimeSeriesDatum['value'] | undefined>()
-  const [valueLabel, setValueLabel] = useState<string | undefined>()
-  const value = latestValue ?? defaultData?.value
-
-  const handleHoverData: TimeSeriesDataHandler = useCallback(({ time, value }) => {
-    setLatestValue(value)
-    setValueLabel(time ? unixToDate(time, 'MMM D, YYYY') : '')
-  }, [])
-
-  return { value, valueLabel, handleHoverData, setLatestValue, setValueLabel }
-}
-
-export const useHandleHoverData2 = (defaultValue?: number | undefined) => {
+export const useHandleHoverData = (defaultValue?: number | undefined) => {
   const [latestValue, setLatestValue] = useState<number | undefined>()
   const [valueLabel, setValueLabel] = useState<string | undefined>()
   const value = latestValue ?? defaultValue
