@@ -127,13 +127,24 @@ export default function DensityChart({ tierKey }: { tierKey: string }) {
             ...BASE_CHART_OPTIONS,
             timeScale: {
               tickMarkFormatter: (time: UTCTimestamp) => {
+                if (!token0?.decimals || !token1?.decimals) return ''
+
                 const index = timeToIndex(time)
-                return tickData.ticksProcessed[index].price0
+                const tickIdx = tickData.ticksProcessed[index].tickIdx
+                const price0 = (1.0001 ** tickIdx / 10 ** token1.decimals) * 10 ** token0.decimals
+
+                if (price0 < 0.00001) return price0.toExponential()
+                if (price0 < 0.0001) return price0.toLocaleString(undefined, { maximumSignificantDigits: 2 })
+                if (price0 < 0.001) return price0.toLocaleString(undefined, { maximumSignificantDigits: 3 })
+                if (price0 < 0.01) return price0.toLocaleString(undefined, { maximumSignificantDigits: 4 })
+                if (price0 < 10_000) return price0.toLocaleString(undefined, { maximumSignificantDigits: 5 })
+                if (price0 < 1_000_000) return price0.toLocaleString(undefined, { maximumFractionDigits: 0 })
+                return price0.toExponential()
               },
             },
           }
         : BASE_CHART_OPTIONS,
-    [tickData?.ticksProcessed]
+    [tickData?.ticksProcessed, token0?.decimals, token1?.decimals]
   )
 
   useEffect(() => {

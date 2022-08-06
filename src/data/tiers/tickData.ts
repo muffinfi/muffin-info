@@ -261,12 +261,16 @@ export const fetchTicksSurroundingPrice = async (
         break
       }
 
+      // TODO:  Pending to delete price{0,1} properties
+      //
+      // Prices of ticks are only needed when displaying the "ticks" in xaxis of the charts.
+      // Therefore, we do not need to precompute them here. This solves a huge performance issue.
       const currentTickProcessed: TickProcessed = {
         liquidityActive: previousTickProcessed.liquidityActive,
         tickIdx: currentTickIdx,
         liquidityNet: JSBI.BigInt(0),
-        price0: tickToPrice(token0, token1, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
-        price1: tickToPrice(token1, token0, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
+        price0: '', // tickToPrice(token0, token1, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
+        price1: '', // tickToPrice(token1, token0, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
         liquidityGross: JSBI.BigInt(0),
       }
 
