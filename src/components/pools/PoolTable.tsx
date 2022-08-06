@@ -56,7 +56,7 @@ const LinkWrapper = styled(Link)`
 `
 
 const SORT_FIELD = {
-  pool: 'token0.symbol',
+  pool: 'token0.symbol + token1.symbol',
   feeTier: 'tiers.0.feeTier',
   volumeUSD: 'volumeUSD',
   tvlUSD: 'tvlUSD',
@@ -128,12 +128,14 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
         ?.filter((x) => !!x && !(TOKEN_HIDE.includes(x.token0.address) || TOKEN_HIDE.includes(x.token1.address)))
         .sort((a, b) => {
           if (a && b) {
-            return getValue(a, sortField) > getValue(b, sortField)
-              ? (sortDirection ? -1 : 1) * 1
-              : (sortDirection ? -1 : 1) * -1
-          } else {
-            return -1
+            for (const field of sortField.split(/\s*\+\s*/)) {
+              const va = getValue(a, field)
+              const vb = getValue(b, field)
+              if (va == vb) continue // note: not strict equal
+              return va > vb ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+            }
           }
+          return -1
         })
         .slice(maxItems * (page - 1), page * maxItems) ?? []
     )
