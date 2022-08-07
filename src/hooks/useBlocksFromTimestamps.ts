@@ -3,6 +3,7 @@ import gql from 'graphql-tag'
 import { useEffect, useMemo, useState } from 'react'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 import { splitQuery } from 'utils/queries'
+import { useMemoArray } from './useMemoArray'
 
 export const GET_BLOCKS = (timestamps: string[]) => {
   let queryString = 'query blocks {'
@@ -22,6 +23,8 @@ export const GET_BLOCKS = (timestamps: string[]) => {
 /**
  * for a given array of timestamps, returns block entities
  * @param timestamps
+ *
+ * FIXME:  block data does not renew here even time passes
  */
 export function useBlocksFromTimestamps(
   timestamps: number[],
@@ -42,22 +45,21 @@ export function useBlocksFromTimestamps(
   const { blockClient } = useClients()
   const activeBlockClient = blockClientOverride ?? blockClient
 
-  // derive blocks based on active network
-  const networkBlocks = blocks?.[activeNetwork.id]
+  const timestampsMemoized = useMemoArray(timestamps)
 
   useEffect(() => {
     async function fetchData() {
-      const results = await splitQuery(GET_BLOCKS, activeBlockClient, [], timestamps)
+      const results = await splitQuery(GET_BLOCKS, activeBlockClient, [], timestampsMemoized)
       if (results) {
-        setBlocks({ ...(blocks ?? {}), [activeNetwork.id]: results })
+        setBlocks((blocks: any) => ({ ...(blocks ?? {}), [activeNetwork.id]: results }))
       } else {
         setError(true)
       }
     }
-    if (!networkBlocks && !error) {
+    if (!blocks?.[activeNetwork.id] && !error) {
       fetchData()
     }
-  })
+  }, [timestampsMemoized, activeBlockClient, blocks, activeNetwork.id, error])
 
   const blocksFormatted = useMemo(() => {
     if (blocks?.[activeNetwork.id]) {

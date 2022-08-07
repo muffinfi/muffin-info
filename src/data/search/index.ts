@@ -326,10 +326,11 @@ export function useFetchSearchResults(
   }, [tierData])
 
   // format as token and pool datas
-  const { data: tokenFullDatas, loading: tokenFullLoading } = useFetchedTokenDatas(allFetchedTokens.map((t) => t.id))
-
-  const poolDatasFull = usePoolDatas(allFetchedPools.map((p) => p.id))
-  const tierDatasFull = useTierDatas(allFetchedTiers.map((p) => p.id))
+  const { data: tokenFullDatas, loading: tokenFullLoading } = useFetchedTokenDatas(
+    useMemo(() => allFetchedTokens.map((t) => t.id), [allFetchedTokens])
+  )
+  const poolDatasFull = usePoolDatas(useMemo(() => allFetchedPools.map((p) => p.id), [allFetchedPools]))
+  const tierDatasFull = useTierDatas(useMemo(() => allFetchedTiers.map((p) => p.id), [allFetchedTiers]))
   const formattedTokens = useMemo(() => (tokenFullDatas ? Object.values(tokenFullDatas) : []), [tokenFullDatas])
 
   const newTokens = useMemo(() => {
