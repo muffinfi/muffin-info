@@ -1,7 +1,7 @@
 import { fetchTierChartData } from 'data/tiers/chartData'
 import { TierTickData } from 'data/tiers/tickData'
 import { fetchTierTransactions } from 'data/tiers/transactions'
-import { useMemoArrayOptional } from 'hooks/useMemoArray'
+import { useMemoArray, useMemoArrayOptional } from 'hooks/useMemoArray'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
@@ -147,13 +147,6 @@ export function useTierTickData(
 }
 
 /**
- * Returns true if the two given arrays have the same items
- */
-const isSameArrayItems = <T>(xs: T[], ys: T[]): boolean => {
-  return xs.length === ys.length && xs.every((x, i) => x === ys[i])
-}
-
-/**
  * Batch fetch tier's chart data
  */
 export function useTierChartDataList(
@@ -166,9 +159,10 @@ export function useTierChartDataList(
   const [activeNetwork] = useActiveNetworkVersion()
 
   const normalizedKeys = useMemo(() => keys.map((key) => normalizeKey(key)), [keys])
-  const tiers = useSelector(
-    (state: AppState) => normalizedKeys.map((normalizedKey) => state.tiers.byKey[activeNetwork.id]?.[normalizedKey]),
-    isSameArrayItems
+  const tiers = useMemoArray(
+    useSelector((state: AppState) =>
+      normalizedKeys.map((normalizedKey) => state.tiers.byKey[activeNetwork.id]?.[normalizedKey])
+    )
   )
   const chartDataList = useMemo(() => tiers.map((tier) => tier?.chartData), [tiers])
   const normalizedKeysNoData = useMemo(() => normalizedKeys.filter((_normalizedKey, i) => chartDataList[i] == null), [

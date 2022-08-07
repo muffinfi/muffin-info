@@ -83,13 +83,7 @@ function Chart({
       </RowBetween>
 
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart
-          data={mergedData}
-          margin={{ top: 10, right: 3, left: 3, bottom: 0 }}
-          onMouseLeave={() => {
-            onHoverData?.(undefined)
-          }}
-        >
+        <AreaChart data={mergedData} margin={{ top: 10, right: 3, left: 3, bottom: 0 }}>
           {dataList.map((_, i) =>
             colors[i] != null ? (
               <defs key={colors[i]}>
@@ -116,9 +110,11 @@ function Chart({
           />
           <Tooltip
             cursor={{ stroke: theme.bg5 }}
-            contentStyle={{ display: 'none' }}
-            formatter={(value: number, name: string, props_: { payload: MergedTimeSeriesDatum }) => {
-              onHoverData?.(props_.payload)
+            content={({ payload }) => {
+              requestAnimationFrame(() => {
+                onHoverData?.(payload?.[0]?.payload)
+              })
+              return null
             }}
           />
           {dataList.map((_, i) => (

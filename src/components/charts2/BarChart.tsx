@@ -77,13 +77,7 @@ const Chart = ({
       </RowBetween>
 
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={mergedData}
-          margin={{ top: 10, right: 3, left: 3, bottom: 0 }}
-          onMouseLeave={() => {
-            onHoverData?.(undefined)
-          }}
-        >
+        <BarChart data={mergedData} margin={{ top: 10, right: 3, left: 3, bottom: 0 }}>
           <CartesianGrid horizontal vertical={false} stroke={gridLineColor} strokeDasharray="3 3" />
           <XAxis
             dataKey="time"
@@ -100,9 +94,11 @@ const Chart = ({
           />
           <Tooltip
             cursor={{ fill: theme.bg2 }}
-            contentStyle={{ display: 'none' }}
-            formatter={(value: number, name: string, props_: { payload: MergedTimeSeriesDatum }) => {
-              onHoverData?.(props_.payload)
+            content={({ payload }) => {
+              requestAnimationFrame(() => {
+                onHoverData?.(payload?.[0]?.payload)
+              })
+              return null
             }}
           />
 
@@ -112,18 +108,6 @@ const Chart = ({
               stackId="1"
               dataKey={(datum: MergedTimeSeriesDatum) => datum.values[i]}
               fill={transparentize(0.0, colors[i % colors.length])}
-              // shape={(props_: { x: number; y: number; width: number; height: number }) => (
-              //   <g>
-              //     <rect
-              //       x={props_.x}
-              //       y={props_.y}
-              //       width={props_.width}
-              //       height={props_.height}
-              //       fill={transparentize(0.2, colors[i % colors.length])}
-              //       rx="0"
-              //     />
-              //   </g>
-              // )}
               isAnimationActive={false}
             />
           ))}
