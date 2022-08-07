@@ -29,24 +29,24 @@ const ResponsiveGrid = styled.div`
 
   @media screen and (max-width: 900px) {
     grid-template-columns: 20px 1.5fr repeat(3, 1fr);
-    & :nth-child(4) {
+    & > :nth-child(4) {
       display: none;
     }
   }
 
   @media screen and (max-width: 800px) {
     grid-template-columns: 20px 1.5fr repeat(2, 1fr);
-    & :nth-child(6) {
+    & > :nth-child(6) {
       display: none;
     }
   }
 
   @media screen and (max-width: 670px) {
     grid-template-columns: repeat(2, 1fr);
-    > *:first-child {
+    & > :first-child {
       display: none;
     }
-    > *:nth-child(3) {
+    & > :nth-child(3) {
       display: none;
     }
   }

@@ -109,7 +109,8 @@ export default function TokenPage({
 
   // theming
   const theme = useTheme()
-  const backgroundColor = useColor(address, theme.primary1)
+  const buttonColor = useColor(address, theme.primary1)
+  const backgroundColor = useColor(address, theme.secondary1)
 
   // scroll on page view
   useEffect(() => {
@@ -213,7 +214,7 @@ export default function TokenPage({
                 </ButtonGray>
               </StyledExternalLink>
               <StyledExternalLink href={`https://muffin.fi/#/swap?inputCurrency=${address}`}>
-                <ButtonPrimary width="100px" bgColor={backgroundColor} style={{ height: '44px' }}>
+                <ButtonPrimary width="100px" bgColor={buttonColor} style={{ height: '44px' }}>
                   Trade
                 </ButtonPrimary>
               </StyledExternalLink>
