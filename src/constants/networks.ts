@@ -8,6 +8,7 @@ export enum SupportedNetwork {
   ARBITRUM,
   OPTIMISM,
   POLYGON,
+  RINKEBY,
 }
 
 export type NetworkInfo = {
@@ -64,9 +65,20 @@ export const PolygonNetworkInfo: NetworkInfo = {
   blurb: '',
 }
 
+export const RinkebyNetworkInfo: NetworkInfo = {
+  id: SupportedNetwork.RINKEBY,
+  route: 'rinkeby',
+  name: 'Rinkeby',
+  bgColor: '#F94903',
+  primaryColor: '#F94903',
+  secondaryColor: '#2172E5',
+  imageURL: ETHEREUM_LOGO_URL,
+}
+
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
-  EthereumNetworkInfo,
-  PolygonNetworkInfo,
-  OptimismNetworkInfo,
-  ArbitrumNetworkInfo,
+  // EthereumNetworkInfo, // FIXME:
+  // PolygonNetworkInfo,
+  // OptimismNetworkInfo,
+  // ArbitrumNetworkInfo,
+  RinkebyNetworkInfo,
 ]

@@ -7,7 +7,7 @@ export const healthClient = new ApolloClient({
 
 export const blockClient = new ApolloClient({
   // uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
-  uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/rinkeby-blocks',
+  uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/rinkeby-blocks', // FIXME: temp
   cache: new InMemoryCache(),
   queryDeduplication: true,
   defaultOptions: {
@@ -174,6 +174,49 @@ export const polygonBlockClient = new ApolloClient({
     },
     query: {
       fetchPolicy: 'cache-first',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const rinkebyClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/dkenw/muffin-rinkeby',
+  cache: new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  }),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
+})
+
+export const rinkebyBlockClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/rinkeby-blocks',
+  cache: new InMemoryCache(),
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
       errorPolicy: 'all',
     },
   },

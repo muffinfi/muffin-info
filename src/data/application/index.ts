@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import { ArbitrumNetworkInfo, EthereumNetworkInfo } from 'constants/networks'
+import { ArbitrumNetworkInfo, EthereumNetworkInfo, RinkebyNetworkInfo } from 'constants/networks'
 import gql from 'graphql-tag'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { healthClient } from './../../apollo/client'
@@ -49,12 +49,11 @@ export function useFetchedSubgraphStatus(): {
     client: healthClient,
     fetchPolicy: 'network-only',
     variables: {
+      // prettier-ignore
       name:
-        activeNetwork === EthereumNetworkInfo
-          ? 'dkenw/muffin-rinkeby' // FIXME: temp
-          : activeNetwork === ArbitrumNetworkInfo
-          ? 'ianlapham/uniswap-arbitrum-one'
-          : 'ianlapham/uniswap-optimism',
+        activeNetwork === EthereumNetworkInfo ? 'dkenw/muffin-rinkeby' :  // FIXME: temp
+        activeNetwork === RinkebyNetworkInfo ? 'dkenw/muffin-rinkeby' :
+        activeNetwork === ArbitrumNetworkInfo ? 'ianlapham/uniswap-arbitrum-one' : 'ianlapham/uniswap-optimism',
     },
   })
 

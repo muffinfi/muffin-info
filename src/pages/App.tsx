@@ -3,7 +3,7 @@ import { DarkGreyCard } from 'components/Card'
 import { LocalLoader } from 'components/Loader'
 import { EthereumNetworkInfo, OptimismNetworkInfo, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
 import React, { Suspense, useEffect } from 'react'
-import { Route, Switch, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, TYPE } from 'theme'
@@ -121,6 +121,11 @@ export default function App() {
     subgraphStatus.headBlock && subgraphStatus.syncedBlock && activeNetwork === OptimismNetworkInfo
       ? subgraphStatus.headBlock - subgraphStatus.syncedBlock > BLOCK_DIFFERENCE_THRESHOLD
       : false
+
+  // TODO: temp force redirecting to rinkeby
+  if (!location.pathname.startsWith('/rinkeby/')) {
+    return <Redirect to="/rinkeby/" />
+  }
 
   return (
     <Suspense fallback={null}>

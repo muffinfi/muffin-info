@@ -101,6 +101,7 @@ export const initialState: TiersState = {
     [SupportedNetwork.ARBITRUM]: {},
     [SupportedNetwork.OPTIMISM]: {},
     [SupportedNetwork.POLYGON]: {},
+    [SupportedNetwork.RINKEBY]: {},
   },
 }
 

@@ -1,6 +1,6 @@
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed } from 'components/Row'
-import { PolygonNetworkInfo, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
+import { PolygonNetworkInfo, RinkebyNetworkInfo, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import React, { useRef, useState } from 'react'
@@ -40,8 +40,9 @@ const LogoWrapper = styled.img`
   height: 20px;
 `
 
-const SelectedNetworkName = styled.div`
+const SelectedNetworkName = styled(RowFixed)`
   white-space: nowrap;
+  flex-wrap: nowrap;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none
   `}
@@ -108,7 +109,9 @@ export default function NetworkDropdown() {
             <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="2px" style={{ whiteSpace: 'nowrap' }}>
               {activeNetwork.name}
             </TYPE.main>
-            {activeNetwork === EthereumNetworkInfo || activeNetwork === PolygonNetworkInfo ? null : (
+            {activeNetwork === EthereumNetworkInfo ||
+            activeNetwork === PolygonNetworkInfo ||
+            activeNetwork === RinkebyNetworkInfo ? null : (
               <Badge bgColor={activeNetwork.primaryColor} style={{ margin: '0 4px' }}>
                 L2
               </Badge>
