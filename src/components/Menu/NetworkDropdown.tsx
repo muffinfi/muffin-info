@@ -1,13 +1,13 @@
-import { RowFixed, RowBetween } from 'components/Row'
+import { AutoColumn } from 'components/Column'
+import { RowBetween, RowFixed } from 'components/Row'
 import { PolygonNetworkInfo, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
-import React, { useState, useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { StyledInternalLink, TYPE } from 'theme'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { AutoColumn } from 'components/Column'
 import { EthereumNetworkInfo } from '../../constants/networks'
 
 const Container = styled.div`
@@ -40,8 +40,17 @@ const LogoWrapper = styled.img`
   height: 20px;
 `
 
+const SelectedNetworkName = styled.div`
+  white-space: nowrap;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none
+  `}
+`
+
 const FlyOut = styled.div`
   background-color: ${({ theme }) => theme.bg1};
+  box-shadow: 0 0 4px 6px rgba(0, 0, 0, 0.07);
+
   position: absolute;
   top: 40px;
   left: 0;
@@ -95,14 +104,16 @@ export default function NetworkDropdown() {
       <Wrapper onClick={() => setShowMenu(!showMenu)}>
         <RowFixed>
           <LogoWrapper src={activeNetwork.imageURL} />
-          <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="2px" style={{ whiteSpace: 'nowrap' }}>
-            {activeNetwork.name}
-          </TYPE.main>
-          {activeNetwork === EthereumNetworkInfo || activeNetwork === PolygonNetworkInfo ? null : (
-            <Badge bgColor={activeNetwork.primaryColor} style={{ margin: '0 4px' }}>
-              L2
-            </Badge>
-          )}
+          <SelectedNetworkName>
+            <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="2px" style={{ whiteSpace: 'nowrap' }}>
+              {activeNetwork.name}
+            </TYPE.main>
+            {activeNetwork === EthereumNetworkInfo || activeNetwork === PolygonNetworkInfo ? null : (
+              <Badge bgColor={activeNetwork.primaryColor} style={{ margin: '0 4px' }}>
+                L2
+              </Badge>
+            )}
+          </SelectedNetworkName>
           <ChevronDown size="20px" />
         </RowFixed>
       </Wrapper>

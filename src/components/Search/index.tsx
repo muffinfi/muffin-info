@@ -25,21 +25,24 @@ import { POOL_HIDE, TOKEN_HIDE } from '../../constants/index'
 const Container = styled.div`
   position: relative;
   z-index: 30;
+
   width: 100%;
+  max-width: 250px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    position: unset;
+  `};
 `
 
 const Wrapper = styled(Row)`
   background-color: ${({ theme }) => theme.black};
   padding: 10px 16px;
-  width: 500px;
+
+  width: 100%;
   height: 38px;
   border-radius: 20px;
   position: relative;
   z-index: 9999;
-
-  @media (max-width: 1080px) {
-    width: 100%;
-  } ;
 `
 
 const StyledInput = styled.input`
@@ -70,7 +73,7 @@ const Menu = styled.div<{ hide: boolean }>`
   display: flex;
   flex-direction: column;
   z-index: 9999;
-  width: 800px;
+  width: 700px;
   top: 50px;
   max-height: 600px;
   overflow: auto;
@@ -83,15 +86,23 @@ const Menu = styled.div<{ hide: boolean }>`
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.04);
   display: ${({ hide }) => hide && 'none'};
-  border: 1px solid ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.primary5};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    top: 60px;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-height: 400px;
+  `};
+
+  /* ${({ theme }) => theme.mediaWidth.upToMedium`
     position: absolute;
     margin-top: 4px;
     z-index: 9999;
     width: 100%;
     max-height: 400px;
-  `};
+  `}; */
 `
 
 const Blackout = styled.div`
@@ -108,7 +119,7 @@ const Blackout = styled.div`
 const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 1.5fr repeat(3, 1fr);
+  grid-template-columns: 2.5fr repeat(3, 1fr);
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-columns: 1fr;
@@ -248,7 +259,7 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
             onChange={(e) => {
               setValue(e.target.value)
             }}
-            placeholder="Search pools or tokens"
+            placeholder="Search"
             ref={ref}
             onFocus={() => {
               setFocused(true)

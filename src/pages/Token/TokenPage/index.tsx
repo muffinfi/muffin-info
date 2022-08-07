@@ -40,7 +40,7 @@ const StyledCMCLogo = styled.img`
 
 const TitleRow = styled(RowBetween)`
   position: sticky;
-  top: 70px;
+  top: 60px;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   background-color: #1f212840;

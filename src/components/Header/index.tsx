@@ -1,118 +1,92 @@
-import { AutoColumn } from 'components/Column'
 import NetworkDropdown from 'components/Menu/NetworkDropdown'
 import SearchSmall from 'components/Search'
 import { darken } from 'polished'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { useActiveNetworkVersion } from 'state/application/hooks'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
+import { ExternalLink } from 'theme'
 import { networkPrefix } from 'utils/networkPrefix'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import Menu from '../Menu'
-import Row, { RowBetween, RowFixed } from '../Row'
+import Row, { RowBetween } from '../Row'
 
-const HeaderFrame = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 120px;
-  align-items: center;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
-  width: 100%;
-  top: 0;
+const Wrapper = styled(RowBetween)`
   position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  top: 0;
   z-index: 2;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
   background-color: ${({ theme }) => theme.bg0};
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
-  @media (max-width: 1080px) {
-    grid-template-columns: 1fr;
-    padding: 0.5rem 1rem;
-    width: calc(100%);
-    position: relative;
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 0.5rem 1rem;
-  `}
+  padding: 0.65rem 1rem;
+  height: 60px;
+  gap: 8px;
 `
 
-const HeaderControls = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-self: flex-end;
-
-  @media (max-width: 1080px) {
-    display: none;
+const NavLinkRow = styled(Row)`
+  & > *:not(:first-child) {
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+      display: none
+    `}
   }
 `
 
-const HeaderRow = styled(RowFixed)`
-  @media (max-width: 1080px) {
-    width: 100%;
-  }
-`
-
-const HeaderLinks = styled(Row)`
-  justify-content: center;
-  @media (max-width: 1080px) {
-    padding: 0.5rem;
-    justify-content: flex-end;
-  } ;
-`
-
-const Title = styled(NavLink)`
-  display: flex;
-  align-items: center;
-  pointer-events: auto;
-  justify-self: flex-start;
+const LogoWrapper = styled(NavLink)`
   margin-right: 12px;
+  pointer-events: auto;
   :hover {
     cursor: pointer;
   }
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    justify-self: center;
-  `};
 `
 
-const UniIcon = styled.div`
-  transition: transform 0.3s ease;
-  :hover {
-    transform: rotate(-5deg);
+const navLinkMixin = css`
+  ${({ theme }) => theme.flexRowNoWrap}
+
+  width: fit-content;
+  margin: 0 6px;
+  padding: 8px 12px;
+
+  cursor: pointer;
+  outline: none;
+  text-decoration: none;
+  border-radius: 3rem;
+
+  font-size: 1rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text3};
+
+  :active {
+    color: ${({ theme }) => theme.text3};
+  }
+
+  :hover,
+  :focus {
+    color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 `
 
 const activeClassName = 'ACTIVE'
 
-const StyledNavLink = styled(NavLink).attrs({
-  activeClassName,
-})`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.text3};
-  font-size: 1rem;
-  width: fit-content;
-  margin: 0 6px;
-  padding: 8px 12px;
-  font-weight: 500;
+const StyledNavLink = styled(NavLink).attrs({ activeClassName })`
+  ${navLinkMixin}
 
   &.${activeClassName} {
     border-radius: 12px;
     background-color: ${({ theme }) => theme.bg2};
     color: ${({ theme }) => theme.text1};
   }
+`
 
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+const StyledExternalLink = styled(ExternalLink)`
+  ${navLinkMixin}
+`
+
+const UniIcon = styled.div`
+  transition: transform 0.3s ease;
+  :hover {
+    transform: rotate(-5deg);
   }
 `
 
@@ -146,66 +120,52 @@ export const StyledMenuButton = styled.button`
   }
 `
 
-const SmallContentGrouping = styled.div`
-  width: 100%;
-  display: none;
-  @media (max-width: 1080px) {
-    display: initial;
-  }
-`
-
 export default function Header() {
   const [activeNewtork] = useActiveNetworkVersion()
 
   return (
-    <HeaderFrame>
-      <HeaderRow>
-        <Title to={networkPrefix(activeNewtork)}>
+    <Wrapper>
+      <NavLinkRow width="auto" minWidth="auto">
+        <LogoWrapper to={networkPrefix(activeNewtork)}>
           <UniIcon>
             <img width={'24px'} src={LogoDark} alt="logo" />
           </UniIcon>
-        </Title>
-        <HeaderLinks>
-          <StyledNavLink
-            id={`overview-nav-link`}
-            to={networkPrefix(activeNewtork)}
-            isActive={(match, { pathname }) => pathname === '/'}
-          >
-            Overview
-          </StyledNavLink>
-          <StyledNavLink
-            id={`pools-nav-link`}
-            to={networkPrefix(activeNewtork) + 'pools'}
-            isActive={(match, { pathname }) => Boolean(match && !pathname.includes('/tiers'))}
-          >
-            Pools
-          </StyledNavLink>
-          <StyledNavLink
-            id={`tiers-nav-link`}
-            to={networkPrefix(activeNewtork) + 'tiers'}
-            isActive={(match, { pathname }) => Boolean(match || pathname.includes('/tiers'))}
-          >
-            Tiers
-          </StyledNavLink>
-          <StyledNavLink id={`tokens-nav-link`} to={networkPrefix(activeNewtork) + 'tokens'}>
-            Tokens
-          </StyledNavLink>
-        </HeaderLinks>
-      </HeaderRow>
-      <HeaderControls>
+        </LogoWrapper>
+        <StyledNavLink
+          id={`overview-nav-link`}
+          to={networkPrefix(activeNewtork)}
+          isActive={(match, { pathname }) => pathname === '/'}
+        >
+          Overview
+        </StyledNavLink>
+        <StyledNavLink
+          id={`pools-nav-link`}
+          to={networkPrefix(activeNewtork) + 'pools'}
+          isActive={(match, { pathname }) => Boolean(match && !pathname.includes('/tiers'))}
+        >
+          Pools
+        </StyledNavLink>
+        <StyledNavLink
+          id={`tiers-nav-link`}
+          to={networkPrefix(activeNewtork) + 'tiers'}
+          isActive={(match, { pathname }) => Boolean(match || pathname.includes('/tiers'))}
+        >
+          Tiers
+        </StyledNavLink>
+        <StyledNavLink id={`tokens-nav-link`} to={networkPrefix(activeNewtork) + 'tokens'}>
+          Tokens
+        </StyledNavLink>
+        <StyledExternalLink href="https://muffin.fi/">
+          App
+          <sup>↗</sup>
+        </StyledExternalLink>
+      </NavLinkRow>
+
+      <Row width="100%" minWidth="auto" justify="flex-end">
         <NetworkDropdown />
         <SearchSmall />
         <Menu />
-      </HeaderControls>
-      <SmallContentGrouping>
-        <AutoColumn gap="sm">
-          <RowBetween>
-            <NetworkDropdown />
-            <Menu />
-          </RowBetween>
-          <SearchSmall />
-        </AutoColumn>
-      </SmallContentGrouping>
-    </HeaderFrame>
+      </Row>
+    </Wrapper>
   )
 }

@@ -2,7 +2,7 @@ import { DarkGreyCard } from 'components/Card'
 // import TopBar from 'components/Header/TopBar'
 import { LocalLoader } from 'components/Loader'
 import { EthereumNetworkInfo, OptimismNetworkInfo, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import styled from 'styled-components/macro'
@@ -45,7 +45,7 @@ const BodyWrapper = styled.div<{ warningActive?: boolean }>`
   width: 100%;
   padding-top: 40px;
   /* margin-top: ${({ warningActive }) => (warningActive ? '140px' : '100px')}; */
-  margin-top: ${({ warningActive }) => (warningActive ? '100px' : '60px')};
+  margin-top: ${({ warningActive }) => (warningActive ? '83px' : '43px')};
   align-items: center;
   flex: 1;
   /* overflow-y: auto; */
@@ -58,7 +58,7 @@ const BodyWrapper = styled.div<{ warningActive?: boolean }>`
 
   @media (max-width: 1080px) {
     padding-top: 2rem;
-    margin-top: 140px;
+    margin-top: 50px;
   }
 `
 
@@ -91,11 +91,12 @@ const WarningBanner = styled.div`
 const BLOCK_DIFFERENCE_THRESHOLD = 30
 
 export default function App() {
-  // pretend load buffer
-  const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1300)
-  }, [])
+  // // pretend load buffer
+  // const [loading, setLoading] = useState(true)
+  // useEffect(() => {
+  //   setTimeout(() => setLoading(false), 1300)
+  // }, [])
+  const loading = false
 
   // update network based on route
   // TEMP - find better way to do this
