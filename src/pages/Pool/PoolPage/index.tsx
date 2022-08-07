@@ -27,6 +27,7 @@ import { networkPrefix } from 'utils/networkPrefix'
 import { formatAmount, formatDollarAmount } from 'utils/numbers'
 import { ExternalLink as StyledExternalLink } from 'theme/components'
 import PoolCharts from './PoolCharts'
+import { PoolData } from 'state/pools/reducer'
 
 const TitleRow = styled(RowBetween)`
   position: sticky;
@@ -109,7 +110,7 @@ export default function PoolPage({
   // const backgroundColor = useColor()
 
   // token data
-  const poolData = usePoolDatas([poolId])[0]
+  const poolData = usePoolDatas([poolId])[0] as PoolData | undefined
   const transactions = usePoolTransactions(poolId)
 
   // tiers data

@@ -14,6 +14,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Chart, ChartFitContentTrigger, HistogramSeries, PriceLine, Tooltip } from 'react-lightweight-charts-simple'
 import { useClients } from 'state/application/hooks'
 import { useTierDatas, useTierTickData } from 'state/tiers/hooks'
+import { TierData } from 'state/tiers/reducer'
 import styled from 'styled-components/macro'
 import { isAddress } from 'utils'
 import CustomToolTip from './CustomToolTip'
@@ -87,9 +88,9 @@ export default function DensityChart({ tierKey }: { tierKey: string }) {
   const { dataClient } = useClients()
 
   // poolData
-  const tierData = useTierDatas(useMemo(() => [tierKey], [tierKey]))[0]
-  const formattedAddress0 = isAddress(tierData.pool.token0.address)
-  const formattedAddress1 = isAddress(tierData.pool.token1.address)
+  const tierData = useTierDatas(useMemo(() => [tierKey], [tierKey]))[0] as TierData | undefined
+  const formattedAddress0 = isAddress(tierData?.pool.token0.address)
+  const formattedAddress1 = isAddress(tierData?.pool.token1.address)
 
   // parsed tokens
   const token0 = useMemo(() => {
@@ -179,13 +180,13 @@ export default function DensityChart({ tierKey }: { tierKey: string }) {
     ({ event }: { event: MouseEventParams }) => (
       <CustomToolTip
         index={event.time != null ? timeToIndex(event.time as UTCTimestamp) : undefined}
-        pool={tierData.pool}
+        pool={tierData?.pool}
         tickData={tickData}
         token0={token0}
         token1={token1}
       />
     ),
-    [tickData, tierData.pool, token0, token1]
+    [tickData, tierData?.pool, token0, token1]
   )
 
   const handleInit = useCallback(

@@ -16,6 +16,7 @@ import { Download } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { useTierDatas, useTierTransactions } from 'state/tiers/hooks'
+import { TierData } from 'state/tiers/reducer'
 import { normalizeKey } from 'state/tiers/utils'
 import { useSavedTiers } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -102,7 +103,7 @@ export default function TierPage2({
   const backgroundColor = useColor()
 
   // tier data
-  const tierData = useTierDatas([tierKey])[0]
+  const tierData = useTierDatas([tierKey])[0] as TierData | undefined
   const transactions = useTierTransactions(tierKey)
 
   //watchlist
