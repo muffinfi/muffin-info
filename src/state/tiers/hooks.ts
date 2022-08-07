@@ -1,6 +1,7 @@
 import { fetchTierChartData } from 'data/tiers/chartData'
 import { TierTickData } from 'data/tiers/tickData'
 import { fetchTierTransactions } from 'data/tiers/transactions'
+import { useMemoArray } from 'hooks/useMemoArray'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
@@ -13,7 +14,8 @@ import { normalizeKey } from './utils'
 
 export function useAllTierData() {
   const [network] = useActiveNetworkVersion()
-  return useSelector((state: AppState) => state.tiers.byKey[network.id] ?? {})
+  const allTierData = useSelector((state: AppState) => state.tiers.byKey[network.id])
+  return useMemo(() => allTierData ?? {}, [allTierData])
 }
 
 export function useUpdateTierData() {
@@ -38,14 +40,17 @@ export function useTierDatas(keys: TierKey[]) {
   const allData = useAllTierData()
   const addKeys = useAddTierKeys()
 
-  const normalizedKeys = useMemo(() => keys.map(normalizeKey), [keys])
+  const keysMemoized = useMemoArray(keys)
+  const normalizedKeys = useMemo(() => keysMemoized.map(normalizeKey), [keysMemoized])
 
-  const untrackedKeys = normalizedKeys.reduce((accum: string[], key) => {
-    if (!Object.keys(allData).includes(key)) {
-      accum.push(key)
-    }
-    return accum
-  }, [])
+  const untrackedKeys = useMemo(() => {
+    return normalizedKeys.reduce((accum: string[], key) => {
+      if (!Object.keys(allData).includes(key)) {
+        accum.push(key)
+      }
+      return accum
+    }, [])
+  }, [normalizedKeys, allData])
 
   useEffect(() => {
     if (untrackedKeys.length > 0) {

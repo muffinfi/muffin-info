@@ -1,25 +1,27 @@
-import { AppState, AppDispatch } from './../index'
-import { TokenData, TokenChartEntry } from './reducer'
-import { useCallback, useEffect, useState, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import {
-  updateTokenData,
-  addTokenKeys,
-  addPoolAddresses,
-  updateChartData,
-  updatePriceData,
-  updateTransactions,
-} from './actions'
-import { isAddress } from 'ethers/lib/utils'
-import { fetchPoolsForToken } from 'data/tokens/poolsForToken'
 import { fetchTokenChartData } from 'data/tokens/chartData'
+import { fetchPoolsForToken } from 'data/tokens/poolsForToken'
 import { fetchTokenPriceData } from 'data/tokens/priceData'
 import { fetchTokenTransactions } from 'data/tokens/transactions'
-import { PriceChartEntry, Transaction } from 'types'
-import { notEmpty } from 'utils'
 import dayjs, { OpUnitType } from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import { isAddress } from 'ethers/lib/utils'
+import { useMemoArrayOptional } from 'hooks/useMemoArray'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
+import { PriceChartEntry, Transaction } from 'types'
+import { notEmpty } from 'utils'
+import { AppDispatch, AppState } from './../index'
+import {
+  addPoolAddresses,
+  addTokenKeys,
+  updateChartData,
+  updatePriceData,
+  updateTokenData,
+  updateTransactions,
+} from './actions'
+import { TokenChartEntry, TokenData } from './reducer'
+
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
 
@@ -27,7 +29,8 @@ export function useAllTokenData(): {
   [address: string]: { data: TokenData | undefined; lastUpdated: number | undefined }
 } {
   const [activeNetwork] = useActiveNetworkVersion()
-  return useSelector((state: AppState) => state.tokens.byAddress[activeNetwork.id] ?? {})
+  const allTokenData = useSelector((state: AppState) => state.tokens.byAddress[activeNetwork.id])
+  return useMemo(() => allTokenData ?? {}, [allTokenData])
 }
 
 export function useUpdateTokenData(): (tokens: TokenData[]) => void {
@@ -55,23 +58,24 @@ export function useTokenDatas(addresses: string[] | undefined): TokenData[] | un
   const allTokenData = useAllTokenData()
   const addTokenKeys = useAddTokenKeys()
 
-  // if token not tracked yet track it
-  addresses?.map((a) => {
-    if (!allTokenData[a]) {
-      addTokenKeys([a])
-    }
-  })
+  const addressesMemoized = useMemoArrayOptional(addresses)
+
+  useEffect(() => {
+    // if token not tracked yet track it
+    addressesMemoized?.map((a) => {
+      if (!allTokenData[a]) {
+        addTokenKeys([a])
+      }
+    })
+  }, [addressesMemoized, allTokenData, addTokenKeys])
 
   const data = useMemo(() => {
-    if (!addresses) {
-      return undefined
-    }
-    return addresses
-      .map((a) => {
+    return addressesMemoized
+      ?.map((a) => {
         return allTokenData[a]?.data
       })
       .filter(notEmpty)
-  }, [addresses, allTokenData])
+  }, [addressesMemoized, allTokenData])
 
   return data
 }

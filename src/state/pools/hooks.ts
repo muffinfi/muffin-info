@@ -1,7 +1,8 @@
 import { fetchPoolChartData } from 'data/pools/chartData'
 import { fetchPoolTransactions } from 'data/pools/transactions'
 import { TierTickData } from 'data/tiers/tickData'
-import { useCallback, useEffect, useState } from 'react'
+import { useMemoArray } from 'hooks/useMemoArray'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 import { addPoolKeys, updatePoolChartData, updatePoolTransactions, updateTickData } from 'state/pools/actions'
@@ -15,7 +16,8 @@ export function useAllPoolData(): {
   [address: string]: { data: PoolData | undefined; lastUpdated: number | undefined }
 } {
   const [network] = useActiveNetworkVersion()
-  return useSelector((state: AppState) => state.pools.byAddress[network.id] ?? {})
+  const allPoolData = useSelector((state: AppState) => state.pools.byAddress[network.id])
+  return useMemo(() => allPoolData ?? {}, [allPoolData])
 }
 
 export function useUpdatePoolData(): (pools: PoolData[]) => void {
@@ -40,12 +42,16 @@ export function usePoolDatas(poolAddresses: string[]): PoolData[] {
   const allPoolData = useAllPoolData()
   const addPoolKeys = useAddPoolKeys()
 
-  const untrackedAddresses = poolAddresses.reduce((accum: string[], address) => {
-    if (!Object.keys(allPoolData).includes(address)) {
-      accum.push(address)
-    }
-    return accum
-  }, [])
+  const poolAddressesMemoized = useMemoArray(poolAddresses)
+
+  const untrackedAddresses = useMemo(() => {
+    return poolAddressesMemoized.reduce((accum: string[], address) => {
+      if (!Object.keys(allPoolData).includes(address)) {
+        accum.push(address)
+      }
+      return accum
+    }, [])
+  }, [poolAddressesMemoized, allPoolData])
 
   useEffect(() => {
     if (untrackedAddresses) {
@@ -55,12 +61,14 @@ export function usePoolDatas(poolAddresses: string[]): PoolData[] {
   }, [addPoolKeys, untrackedAddresses])
 
   // filter for pools with data
-  const poolsWithData = poolAddresses
-    .map((address) => {
-      const poolData = allPoolData[address]?.data
-      return poolData ?? undefined
-    })
-    .filter(notEmpty)
+  const poolsWithData = useMemo(() => {
+    return poolAddressesMemoized
+      .map((address) => {
+        const poolData = allPoolData[address]?.data
+        return poolData ?? undefined
+      })
+      .filter(notEmpty)
+  }, [poolAddressesMemoized, allPoolData])
 
   return poolsWithData
 }
