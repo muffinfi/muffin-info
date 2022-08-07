@@ -7,7 +7,7 @@ import { useActiveNetworkVersion } from 'state/application/hooks'
 import styled, { css } from 'styled-components/macro'
 import { ExternalLink } from 'theme'
 import { networkPrefix } from 'utils/networkPrefix'
-import LogoDark from '../../assets/svg/logo_white.svg'
+import LogoDark from '../../assets/svg/muffin_logo.svg'
 import Menu from '../Menu'
 import Row, { RowBetween } from '../Row'
 
@@ -35,7 +35,9 @@ const NavLinkRow = styled(Row)`
 
 const LogoWrapper = styled(NavLink)`
   margin-right: 12px;
+  margin-left: 4px;
   pointer-events: auto;
+  line-height: 0;
   :hover {
     cursor: pointer;
   }
@@ -84,9 +86,9 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 const UniIcon = styled.div`
-  transition: transform 0.3s ease;
+  transition: transform 0.6s ease;
   :hover {
-    transform: rotate(-5deg);
+    transform: rotate(-720deg);
   }
 `
 
