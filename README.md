@@ -1,8 +1,8 @@
-## Uniswap Info V3
+## Muffin Info
 
-An open sourced interface for Uniswap V3 analytics. 
+An open sourced interface for Muffin analytics. Codes are originally forked from Uniswap info.
 
-Info URL: https://info.uniswap.org/#/
+Info URL: https://info.muffin.fi/#/
 
 ## Development
 
@@ -17,8 +17,3 @@ yarn
 ```bash
 yarn start
 ```
-
-## Contributions
-
-**Please open all pull requests against the `master` branch.**
-CI checks will run against all PRs.

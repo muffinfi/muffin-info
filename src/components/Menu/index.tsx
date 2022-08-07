@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle } from 'react-feather'
+import { BookOpen, Code, Info } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 import { networkPrefix } from 'utils/networkPrefix'
@@ -110,7 +110,7 @@ const MenuNavSection = styled.div`
   `};
 `
 
-const CODE_LINK = 'https://github.com/Uniswap/uniswap-v3-info'
+const CODE_LINK = 'https://github.com/muffinfi/muffin'
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
@@ -141,11 +141,11 @@ export default function Menu() {
             <Seperator />
           </MenuNavSection>
 
-          <MenuItem id="link" href="https://uniswap.org/">
+          <MenuItem id="link" href="https://muffin.fi/">
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href="https://docs.uniswap.org/">
+          <MenuItem id="link" href="https://docs.muffin.fi/">
             <BookOpen size={14} />
             Docs
           </MenuItem>
@@ -153,10 +153,10 @@ export default function Menu() {
             <Code size={14} />
             Github
           </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/FCfyBSbCU5">
+          {/* <MenuItem id="link" href="https://discord.gg/">
             <MessageCircle size={14} />
             Discord
-          </MenuItem>
+          </MenuItem> */}
         </MenuFlyout>
       )}
     </StyledMenu>

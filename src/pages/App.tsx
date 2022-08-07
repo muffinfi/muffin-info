@@ -9,7 +9,7 @@ import styled from 'styled-components/macro'
 import { ExternalLink, TYPE } from 'theme'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
-import URLWarning from '../components/Header/URLWarning'
+// import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Home from './Home'
@@ -135,7 +135,7 @@ export default function App() {
         <LocalLoader fill={true} />
       ) : (
         <AppWrapper>
-          <URLWarning />
+          {/* <URLWarning /> */}
           <HeaderWrapper>
             {showNotSyncedWarning && (
               <WarningWrapper>
@@ -157,7 +157,7 @@ export default function App() {
                   <TYPE.label>
                     The Graph hosted network which provides data for this site is temporarily experiencing issues. Check
                     current status{' '}
-                    <ExternalLink href="https://thegraph.com/hosted-service/subgraph/uniswap/uniswap-v3">
+                    <ExternalLink href="https://thegraph.com/hosted-service/subgraph/dkenw/muffin-rinkeby">
                       here.
                     </ExternalLink>
                   </TYPE.label>

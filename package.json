@@ -1,6 +1,6 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "@muffinfi/muffin-info",
+  "description": "Muffin Info",
   "homepage": ".",
   "private": true,
   "devDependencies": {
