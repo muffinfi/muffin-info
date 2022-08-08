@@ -30,16 +30,16 @@ export default function URLWarning() {
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} /> Make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>info.muffin.fi</code>
+        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>analytics.muffin.fi</code>
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>
-  ) : window.location.hostname === 'info.muffin.fi' ? (
+  ) : window.location.hostname === 'analytics.muffin.fi' ? (
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} /> Always make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>info.muffin.fi</code> - bookmark it to
-        be safe.
+        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>analytics.muffin.fi</code> - bookmark
+        it to be safe.
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>
