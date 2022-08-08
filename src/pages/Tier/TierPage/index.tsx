@@ -13,6 +13,7 @@ import { useColor } from 'hooks/useColor'
 import { PageWrapper } from 'pages/styled'
 import React, { useEffect } from 'react'
 import { Download } from 'react-feather'
+import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router-dom'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { useTierDatas, useTierTransactions } from 'state/tiers/hooks'
@@ -86,7 +87,7 @@ const SubInfoRow = styled(Row)`
   `};
 `
 
-export default function TierPage2({
+export default function TierPage({
   match: {
     params: { poolId, tierId },
   },
@@ -119,6 +120,12 @@ export default function TierPage2({
 
   return (
     <PageWrapper>
+      <Helmet>
+        <title>
+          {tierData.pool.token0.symbol} / {tierData.pool.token1.symbol} ({feeTierPercent(tierData.feeTier)}) - Muffin
+          Analytics
+        </title>
+      </Helmet>
       <AutoColumn gap="32px">
         {/* Breadcrumb */}
         <RowBetween>

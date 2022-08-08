@@ -30,6 +30,7 @@ import { getEtherscanLink, shortenAddress } from 'utils'
 import { networkPrefix } from 'utils/networkPrefix'
 import { formatDollarAmount, formatDollarAmountDetailed } from 'utils/numbers'
 import TokenCharts from './TokenCharts'
+import { Helmet } from 'react-helmet'
 
 const StyledCMCLogo = styled.img`
   height: 16px;
@@ -136,9 +137,16 @@ export default function TokenPage({
     )
   }
 
+  const makeHelmet = () => (
+    <Helmet>
+      <title>{tokenData.symbol} - Muffin Analytics</title>
+    </Helmet>
+  )
+
   if (!tokenData.exists) {
     return (
       <PageWrapper>
+        {makeHelmet()}
         <LightGreyCard style={{ textAlign: 'center' }}>
           No pool has been created with this token yet. Create one
           <StyledExternalLink style={{ marginLeft: '4px' }} href={`https://muffin.fi/#/add/${address}`}>
@@ -151,6 +159,7 @@ export default function TokenPage({
 
   return (
     <PageWrapper>
+      {makeHelmet()}
       <AutoColumn gap="32px">
         <RowBetween>
           <AutoRow gap="4px">

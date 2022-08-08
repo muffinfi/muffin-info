@@ -3,6 +3,7 @@ import { AutoColumn } from 'components/Column'
 import TierTable from 'components/tiers/TierTable'
 import { PageWrapper } from 'pages/styled'
 import React, { useEffect, useMemo } from 'react'
+import { Helmet } from 'react-helmet'
 import { useAllTierData, useTierDatas } from 'state/tiers/hooks'
 import { useSavedTiers } from 'state/user/hooks'
 import { TYPE } from 'theme'
@@ -27,6 +28,9 @@ export default function TiersOverview() {
 
   return (
     <PageWrapper>
+      <Helmet>
+        <title>Tiers - Muffin Analytics</title>
+      </Helmet>
       <AutoColumn gap="lg">
         <TYPE.main>Your Watchlist</TYPE.main>
         {watchlists.length > 0 ? (

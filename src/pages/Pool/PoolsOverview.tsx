@@ -3,6 +3,7 @@ import { AutoColumn } from 'components/Column'
 import PoolTable from 'components/pools/PoolTable'
 import { PageWrapper } from 'pages/styled'
 import React, { useEffect, useMemo } from 'react'
+import { Helmet } from 'react-helmet'
 import { useAllPoolData, usePoolDatas } from 'state/pools/hooks'
 import { useSavedPools } from 'state/user/hooks'
 import { TYPE } from 'theme'
@@ -27,6 +28,9 @@ export default function PoolsOverview() {
 
   return (
     <PageWrapper>
+      <Helmet>
+        <title>Pools - Muffin Analytics</title>
+      </Helmet>
       <AutoColumn gap="lg">
         <TYPE.main>Your Watchlist</TYPE.main>
         {watchlistPools.length > 0 ? (

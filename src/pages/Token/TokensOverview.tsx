@@ -1,13 +1,14 @@
-import React, { useMemo, useEffect } from 'react'
-import { PageWrapper } from 'pages/styled'
-import { AutoColumn } from 'components/Column'
-import { TYPE, HideSmall } from 'theme'
-import TokenTable from 'components/tokens/TokenTable'
-import { useAllTokenData, useTokenDatas } from 'state/tokens/hooks'
-import { notEmpty } from 'utils'
-import { useSavedTokens } from 'state/user/hooks'
 import { DarkGreyCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import TokenTable from 'components/tokens/TokenTable'
 import TopTokenMovers from 'components/tokens/TopTokenMovers'
+import { PageWrapper } from 'pages/styled'
+import React, { useEffect, useMemo } from 'react'
+import { Helmet } from 'react-helmet'
+import { useAllTokenData, useTokenDatas } from 'state/tokens/hooks'
+import { useSavedTokens } from 'state/user/hooks'
+import { HideSmall, TYPE } from 'theme'
+import { notEmpty } from 'utils'
 
 export default function TokensOverview() {
   useEffect(() => {
@@ -27,6 +28,9 @@ export default function TokensOverview() {
 
   return (
     <PageWrapper>
+      <Helmet>
+        <title>Tokens - Muffin Analytics</title>
+      </Helmet>
       <AutoColumn gap="lg">
         <TYPE.main>Your Watchlist</TYPE.main>
         {savedTokens.length > 0 ? (

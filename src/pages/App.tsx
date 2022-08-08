@@ -10,6 +10,7 @@ import { ExternalLink, TYPE } from 'theme'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
 // import URLWarning from '../components/Header/URLWarning'
+import { Helmet } from 'react-helmet'
 import Popups from '../components/Popups'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Home from './Home'
@@ -129,6 +130,9 @@ export default function App() {
 
   return (
     <Suspense fallback={null}>
+      <Helmet>
+        <title>Muffin Analytics</title>
+      </Helmet>
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       {loading ? (

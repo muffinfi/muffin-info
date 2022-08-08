@@ -14,20 +14,21 @@ import { EthereumNetworkInfo } from 'constants/networks'
 import { PageWrapper } from 'pages/styled'
 import React, { useEffect, useMemo } from 'react'
 import { Download } from 'react-feather'
+import { Helmet } from 'react-helmet'
 import { RouteComponentProps } from 'react-router-dom'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { usePoolDatas, usePoolTransactions } from 'state/pools/hooks'
+import { PoolData } from 'state/pools/reducer'
 import { useTierDatas } from 'state/tiers/hooks'
 import { normalizeKey } from 'state/tiers/utils'
 import { useSavedPools } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { StyledInternalLink, TYPE } from 'theme'
+import { ExternalLink as StyledExternalLink } from 'theme/components'
 import { feeTierPercent } from 'utils'
 import { networkPrefix } from 'utils/networkPrefix'
 import { formatAmount, formatDollarAmount } from 'utils/numbers'
-import { ExternalLink as StyledExternalLink } from 'theme/components'
 import PoolCharts from './PoolCharts'
-import { PoolData } from 'state/pools/reducer'
 
 const TitleRow = styled(RowBetween)`
   position: sticky;
@@ -130,6 +131,11 @@ export default function PoolPage({
 
   return (
     <PageWrapper>
+      <Helmet>
+        <title>
+          {poolData.token0.symbol} / {poolData.token1.symbol} - Muffin Analytics
+        </title>
+      </Helmet>
       <AutoColumn gap="32px">
         <RowBetween>
           <AutoRow gap="4px">
