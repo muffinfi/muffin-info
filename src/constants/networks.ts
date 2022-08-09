@@ -78,10 +78,11 @@ export const RinkebyNetworkInfo: NetworkInfo = {
   testnet: true,
 }
 
-export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
-  // EthereumNetworkInfo, // FIXME:
-  // PolygonNetworkInfo,
-  // OptimismNetworkInfo,
-  // ArbitrumNetworkInfo,
-  RinkebyNetworkInfo,
-]
+export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = process.env.REACT_APP_IS_TESTNET
+  ? [RinkebyNetworkInfo]
+  : [
+      EthereumNetworkInfo,
+      // PolygonNetworkInfo,
+      // OptimismNetworkInfo,
+      // ArbitrumNetworkInfo,
+    ]
