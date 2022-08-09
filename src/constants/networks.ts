@@ -78,11 +78,17 @@ export const RinkebyNetworkInfo: NetworkInfo = {
   testnet: true,
 }
 
-export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = process.env.REACT_APP_IS_TESTNET
-  ? [RinkebyNetworkInfo]
-  : [
-      EthereumNetworkInfo,
-      // PolygonNetworkInfo,
-      // OptimismNetworkInfo,
-      // ArbitrumNetworkInfo,
-    ]
+const getUrlSubdomain = () => {
+  const parts = window.location.hostname.split('.')
+  return parts.length > 2 ? parts[0] : ''
+}
+
+export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] =
+  process.env.REACT_APP_IS_TESTNET || getUrlSubdomain().includes('testnet')
+    ? [RinkebyNetworkInfo]
+    : [
+        EthereumNetworkInfo,
+        // PolygonNetworkInfo,
+        // OptimismNetworkInfo,
+        // ArbitrumNetworkInfo,
+      ]
