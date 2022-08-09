@@ -209,6 +209,9 @@ export default function App() {
           ) : (
             <BodyWrapper warningActive={showNotSyncedWarning}>
               <Popups />
+              {activeNetwork.testnet && (
+                <div style={{ opacity: 0.2, fontWeight: 500, marginBottom: '1rem' }}>(Testnet)</div>
+              )}
               <Switch>
                 {/* TODO: Old pages pending to delete  */}
                 {/* <Route exact strict path="/:networkID?/pools/:poolId/tiers-0/:tierId" component={EnhancedTierPageOriginal} /> */}
