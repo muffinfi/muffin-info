@@ -1,9 +1,9 @@
 import { DarkGreyCard } from 'components/Card'
 // import TopBar from 'components/Header/TopBar'
 import { LocalLoader } from 'components/Loader'
-import { EthereumNetworkInfo, OptimismNetworkInfo, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
+import { OptimismNetworkInfo, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
 import React, { Suspense, useEffect } from 'react'
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import { generatePath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, TYPE } from 'theme'
@@ -15,14 +15,55 @@ import Popups from '../components/Popups'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Home from './Home'
 import PoolPage from './Pool/PoolPage'
-import PoolPageOriginal from './Pool/PoolPage_original'
+// import PoolPageOriginal from './Pool/PoolPage_original'
 import PoolsOverview from './Pool/PoolsOverview'
 import { RedirectToTier0 } from './Tier/redirects'
 import TierPage from './Tier/TierPage'
-import TierPageOriginal from './Tier/TierPage_original'
+// import TierPageOriginal from './Tier/TierPage_original'
 import TiersOverview from './Tier/TiersOverview'
 import { RedirectInvalidToken } from './Token/redirects'
 import TokensOverview from './Token/TokensOverview'
+
+/**
+ * HOC to parse network from url and set it to state, or redirect if unknown network
+ */
+const withNetworkSetter = (Component: React.ComponentType<any>) => {
+  function WrappedComponent(props: RouteComponentProps<{ networkID: string | undefined }>) {
+    const networkId = props.match.params.networkID ?? ''
+    const network = SUPPORTED_NETWORK_VERSIONS.find((network) => network.route === networkId)
+
+    const [, setActiveNetwork] = useActiveNetworkVersion()
+    useEffect(() => {
+      if (network) setActiveNetwork(network)
+    }, [network, setActiveNetwork])
+
+    if (network) {
+      return <Component {...props} />
+    }
+
+    const defaultNetworkParam = SUPPORTED_NETWORK_VERSIONS[0]?.route || undefined
+    const path = generatePath(props.match.path, { ...props.match.params, networkID: defaultNetworkParam })
+    console.warn('Unknown network. Redirect to', path)
+
+    return <Redirect to={{ ...props.location, pathname: path }} />
+  }
+
+  WrappedComponent.displayName = Component.displayName
+  return WrappedComponent
+}
+
+// const EnhancedTierPageOriginal = withNetworkSetter(TierPageOriginal)
+// const EnhancedPoolPageOriginal = withNetworkSetter(PoolPageOriginal)
+const EnhancedTierPage = withNetworkSetter(TierPage)
+const EnhancedRedirectToTier0 = withNetworkSetter(RedirectToTier0)
+const EnhancedTiersOverview = withNetworkSetter(TiersOverview)
+const EnhancedPoolPage = withNetworkSetter(PoolPage)
+const EnhancedPoolsOverview = withNetworkSetter(PoolsOverview)
+const EnhancedRedirectInvalidToken = withNetworkSetter(RedirectInvalidToken)
+const EnhancedTokensOverview = withNetworkSetter(TokensOverview)
+const EnhancedHome = withNetworkSetter(Home)
+
+// ---
 
 const AppWrapper = styled.div`
   display: flex;
@@ -99,21 +140,23 @@ export default function App() {
   // }, [])
   const loading = false
 
-  // update network based on route
-  // TEMP - find better way to do this
-  const location = useLocation()
-  const [activeNetwork, setActiveNetwork] = useActiveNetworkVersion()
-  useEffect(() => {
-    if (location.pathname === '/') {
-      setActiveNetwork(EthereumNetworkInfo)
-    } else {
-      SUPPORTED_NETWORK_VERSIONS.map((n) => {
-        if (location.pathname.includes(n.route.toLocaleLowerCase())) {
-          setActiveNetwork(n)
-        }
-      })
-    }
-  }, [location.pathname, setActiveNetwork])
+  // // update network based on route
+  // // TEMP - find better way to do this
+  // const location = useLocation()
+  // const [activeNetwork, setActiveNetwork] = useActiveNetworkVersion()
+  // useEffect(() => {
+  //   if (location.pathname === '/') {
+  //     setActiveNetwork(EthereumNetworkInfo)
+  //   } else {
+  //     SUPPORTED_NETWORK_VERSIONS.map((n) => {
+  //       if (location.pathname.includes(n.route.toLocaleLowerCase())) {
+  //         setActiveNetwork(n)
+  //       }
+  //     })
+  //   }
+  // }, [location.pathname, setActiveNetwork])
+
+  const [activeNetwork] = useActiveNetworkVersion()
 
   // subgraph health
   const [subgraphStatus] = useSubgraphStatus()
@@ -122,11 +165,6 @@ export default function App() {
     subgraphStatus.headBlock && subgraphStatus.syncedBlock && activeNetwork === OptimismNetworkInfo
       ? subgraphStatus.headBlock - subgraphStatus.syncedBlock > BLOCK_DIFFERENCE_THRESHOLD
       : false
-
-  // TODO: temp force redirecting to rinkeby
-  if (!location.pathname.startsWith('/rinkeby/')) {
-    return <Redirect to="/rinkeby/" />
-  }
 
   return (
     <Suspense fallback={null}>
@@ -173,17 +211,17 @@ export default function App() {
               <Popups />
               <Switch>
                 {/* TODO: Old pages pending to delete  */}
-                <Route exact strict path="/:networkID?/pools/:poolId/tiers-0/:tierId" component={TierPageOriginal} />
-                <Route exact strict path="/:networkID?/pools-0/:poolId" component={PoolPageOriginal} />
+                {/* <Route exact strict path="/:networkID?/pools/:poolId/tiers-0/:tierId" component={EnhancedTierPageOriginal} /> */}
+                {/* <Route exact strict path="/:networkID?/pools-0/:poolId" component={EnhancedPoolPageOriginal} /> */}
 
-                <Route exact strict path="/:networkID?/pools/:poolId/tiers/:tierId" component={TierPage} />
-                <Route exact strict path="/:networkID?/pools/:poolId/tiers" component={RedirectToTier0} />
-                <Route exact strict path="/:networkID?/tiers" component={TiersOverview} />
-                <Route exact strict path="/:networkID?/pools/:poolId" component={PoolPage} />
-                <Route exact strict path="/:networkID?/pools" component={PoolsOverview} />
-                <Route exact strict path="/:networkID?/tokens/:address" component={RedirectInvalidToken} />
-                <Route exact strict path="/:networkID?/tokens" component={TokensOverview} />
-                <Route exact path="/:networkID?" component={Home} />
+                <Route exact strict path="/:networkID?/pools/:poolId/tiers/:tierId" component={EnhancedTierPage} />
+                <Route exact strict path="/:networkID?/pools/:poolId/tiers" component={EnhancedRedirectToTier0} />
+                <Route exact strict path="/:networkID?/tiers" component={EnhancedTiersOverview} />
+                <Route exact strict path="/:networkID?/pools/:poolId" component={EnhancedPoolPage} />
+                <Route exact strict path="/:networkID?/pools" component={EnhancedPoolsOverview} />
+                <Route exact strict path="/:networkID?/tokens/:address" component={EnhancedRedirectInvalidToken} />
+                <Route exact strict path="/:networkID?/tokens" component={EnhancedTokensOverview} />
+                <Route exact path="/:networkID?" component={EnhancedHome} />
               </Switch>
               <Marginer />
             </BodyWrapper>

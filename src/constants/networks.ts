@@ -20,6 +20,7 @@ export type NetworkInfo = {
   primaryColor: string
   secondaryColor: string
   blurb?: string
+  testnet?: boolean
 }
 
 export const EthereumNetworkInfo: NetworkInfo = {
@@ -73,6 +74,8 @@ export const RinkebyNetworkInfo: NetworkInfo = {
   primaryColor: '#F94903',
   secondaryColor: '#2172E5',
   imageURL: ETHEREUM_LOGO_URL,
+  blurb: 'Testnet',
+  testnet: true,
 }
 
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = [
