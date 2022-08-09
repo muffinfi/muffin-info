@@ -5,6 +5,7 @@ import React, { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
+import { HelmetProvider } from 'react-helmet-async'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 import './i18n'
@@ -57,17 +58,19 @@ function Updaters() {
 ReactDOM.render(
   <StrictMode>
     <FixedGlobalStyle />
-    <ApolloProvider client={client}>
-      <Provider store={store}>
-        <Updaters />
-        <ThemeProvider>
-          <ThemedGlobalStyle />
-          <HashRouter>
-            <App />
-          </HashRouter>
-        </ThemeProvider>
-      </Provider>
-    </ApolloProvider>
+    <HelmetProvider>
+      <ApolloProvider client={client}>
+        <Provider store={store}>
+          <Updaters />
+          <ThemeProvider>
+            <ThemedGlobalStyle />
+            <HashRouter>
+              <App />
+            </HashRouter>
+          </ThemeProvider>
+        </Provider>
+      </ApolloProvider>
+    </HelmetProvider>
   </StrictMode>,
   document.getElementById('root')
 )

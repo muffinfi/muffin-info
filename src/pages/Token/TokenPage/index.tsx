@@ -18,6 +18,7 @@ import { PageWrapper } from 'pages/styled'
 import React, { useEffect } from 'react'
 import { Download, ExternalLink } from 'react-feather'
 import ReactGA from 'react-ga'
+import { Helmet } from 'react-helmet-async'
 import { RouteComponentProps } from 'react-router-dom'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { usePoolDatas } from 'state/pools/hooks'
@@ -30,7 +31,6 @@ import { getEtherscanLink, shortenAddress } from 'utils'
 import { networkPrefix } from 'utils/networkPrefix'
 import { formatDollarAmount, formatDollarAmountDetailed } from 'utils/numbers'
 import TokenCharts from './TokenCharts'
-import { Helmet } from 'react-helmet'
 
 const StyledCMCLogo = styled.img`
   height: 16px;
