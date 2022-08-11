@@ -76,6 +76,9 @@ const AnimatedImg = styled.div`
   }
 `
 
+/**
+ * @deprecated
+ */
 export const LocalLoader = ({ fill }: { fill: boolean }) => {
   return (
     <Wrapper fill={fill ? 1 : 0}>
@@ -124,3 +127,22 @@ export const LoadingRows = styled.div`
     margin-bottom: 2em;
   }
 `
+
+export const LoadingRowsForTable = () => {
+  return (
+    <LoadingRows>
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+      <div />
+    </LoadingRows>
+  )
+}

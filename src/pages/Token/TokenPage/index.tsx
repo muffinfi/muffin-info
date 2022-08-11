@@ -2,7 +2,7 @@ import { ButtonGray, ButtonPrimary, SavedIcon } from 'components/Button'
 import { DarkGreyCard, LightGreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
-import Loader, { LocalLoader } from 'components/Loader'
+import Loader, { LoadingRowsForTable } from 'components/Loader'
 import { GenericImageWrapper } from 'components/Logo'
 import Percent from 'components/Percent'
 import PoolTable from 'components/pools/PoolTable'
@@ -284,7 +284,7 @@ export default function TokenPage({
           {transactions ? (
             <TransactionTable transactions={transactions} color={backgroundColor} />
           ) : (
-            <LocalLoader fill={false} />
+            <LoadingRowsForTable />
           )}
         </DarkGreyCard>
       </AutoColumn>

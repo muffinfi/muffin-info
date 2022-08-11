@@ -3,7 +3,7 @@ import { DarkGreyCard, GreyBadge } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Loader, { LocalLoader } from 'components/Loader'
+import Loader, { LoadingRowsForTable } from 'components/Loader'
 import { GenericImageWrapper } from 'components/Logo'
 import Percent from 'components/Percent'
 import Row, { AutoRow, RowBetween, RowFixed } from 'components/Row'
@@ -271,7 +271,7 @@ export default function TierPage({
         {/* Transactions */}
         <TYPE.main fontSize="24px">Transactions</TYPE.main>
         <DarkGreyCard>
-          {transactions ? <TransactionTable transactions={transactions} /> : <LocalLoader fill={false} />}
+          {transactions ? <TransactionTable transactions={transactions} /> : <LoadingRowsForTable />}
         </DarkGreyCard>
       </AutoColumn>
     </PageWrapper>
