@@ -130,9 +130,9 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
   const symbolQuote = isToken0Base ? poolData.token1.symbol : poolData.token0.symbol
 
   // chart label setters
-  const tvlHandler = useHandleHoverData(sumLastValues(tvlDataList))
-  const volumeHandler = useHandleHoverData(sumLastValues(volumeDataList))
-  const feesHandler = useHandleHoverData(sumLastValues(feesDataList))
+  const tvlHandler = useHandleHoverData(() => sumLastValues(tvlDataList))
+  const volumeHandler = useHandleHoverData(() => sumLastValues(volumeDataList))
+  const feesHandler = useHandleHoverData(() => sumLastValues(feesDataList))
   const priceHandler = useHandleHoverPriceData(priceDataList)
 
   const feePercents = useMemo(() => poolData.tiers.map((tier) => feeTierPercent(tier.feeTier)), [poolData])
@@ -147,7 +147,7 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
   return (
     <Layout>
       <DarkGreyCard>
-        Volume 24
+        Volume (Daily)
         <ChartLabel value={volumeHandler.value} valueUnit={'USD'} valueLabel={volumeHandler.valueLabel} />
         <BarChart height={270} data={volumeDataList} labels={feePercents} onHoverData={volumeHandler.handleHoverData} />
       </DarkGreyCard>
@@ -159,7 +159,7 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
       </DarkGreyCard>
 
       <DarkGreyCard>
-        Fees 24h
+        Fees (Daily)
         <ChartLabel value={feesHandler.value} valueUnit={'USD'} valueLabel={feesHandler.valueLabel} />
         <BarChart height={270} data={feesDataList} labels={feePercents} onHoverData={feesHandler.handleHoverData} />
       </DarkGreyCard>
