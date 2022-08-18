@@ -6,13 +6,13 @@ import { unixToDate } from 'utils/date'
 import { formatAmount, formatDollarAmount } from 'utils/numbers'
 import { TimeSeriesHoverHandler } from './types'
 
-export const useHandleHoverData = (defaultValue?: number | undefined) => {
+export const useHandleHoverData = (defaultValue?: number | (() => number) | undefined) => {
   const [latestValue, setLatestValue] = useState<number | undefined>()
   const [valueLabel, setValueLabel] = useState<string | undefined>()
-  const value = latestValue ?? defaultValue
+  const value = latestValue ?? (typeof defaultValue === 'function' ? defaultValue() : defaultValue)
 
   const handleHoverData: TimeSeriesHoverHandler = useCallback((datum) => {
-    setLatestValue(datum?.values.reduce((acc, cur) => (acc ?? 0) + (cur ?? 0)))
+    setLatestValue(datum?.values.reduce((acc: number, cur) => acc + (cur ?? 0), 0))
     setValueLabel(datum?.time ? unixToDate(datum.time, 'MMM D, YYYY') : '')
   }, [])
 

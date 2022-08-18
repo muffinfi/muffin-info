@@ -270,21 +270,22 @@ export function useFetchSearchResults(
           },
         })
 
-        const pools = await client.query<PoolRes>({
-          query: POOL_SEARCH,
-          variables: {
-            tokens: tokens.data.asSymbol?.map((t) => t.id),
-            id: value,
-          },
-        })
-
-        const tiers = await client.query<TierRes>({
-          query: TIER_SEARCH,
-          variables: {
-            tokens: tokens.data.asSymbol?.map((t) => t.id),
-            id: value,
-          },
-        })
+        const [pools, tiers] = await Promise.all([
+          client.query<PoolRes>({
+            query: POOL_SEARCH,
+            variables: {
+              tokens: tokens.data.asSymbol?.map((t) => t.id),
+              id: value,
+            },
+          }),
+          client.query<TierRes>({
+            query: TIER_SEARCH,
+            variables: {
+              tokens: tokens.data.asSymbol?.map((t) => t.id),
+              id: value,
+            },
+          }),
+        ])
 
         if (tokens.data) {
           setTokenData(tokens.data)

@@ -6,6 +6,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Row, { RowFixed } from 'components/Row'
 import { useFetchSearchResults } from 'data/search'
+import useDebounce from 'hooks/useDebounce'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Hotkeys from 'react-hot-keys'
 import { useHistory } from 'react-router-dom'
@@ -182,15 +183,12 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
   const [focused, setFocused] = useState<boolean>(false)
   const [showMenu, setShowMenu] = useState(false)
   const [value, setValue] = useState('')
+  const debouncedValue = useDebounce(value, 200)
 
-  const { tokens, pools, tiers } = useFetchSearchResults(value)
+  const { tokens, pools, tiers } = useFetchSearchResults(debouncedValue)
 
   useEffect(() => {
-    if (value !== '') {
-      setFocused(true)
-    } else {
-      setFocused(false)
-    }
+    setFocused(value !== '')
   }, [value])
 
   const [tokensShown, setTokensShown] = useState(3)
@@ -285,17 +283,17 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               <TYPE.main>Tokens</TYPE.main>
               <HideSmall>
                 <TYPE.main textAlign="end" fontSize="12px">
+                  Price
+                </TYPE.main>
+              </HideSmall>
+              <HideSmall>
+                <TYPE.main textAlign="end" fontSize="12px">
                   Volume 24H
                 </TYPE.main>
               </HideSmall>
               <HideSmall>
                 <TYPE.main textAlign="end" fontSize="12px">
                   TVL
-                </TYPE.main>
-              </HideSmall>
-              <HideSmall>
-                <TYPE.main textAlign="end" fontSize="12px">
-                  Price
                 </TYPE.main>
               </HideSmall>
             </ResponsiveGrid>
@@ -323,13 +321,13 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
                         />
                       </RowFixed>
                       <HideSmall>
+                        <TYPE.label textAlign="end">{formatDollarAmount(t.priceUSD)}</TYPE.label>
+                      </HideSmall>
+                      <HideSmall>
                         <TYPE.label textAlign="end">{formatDollarAmount(t.volumeUSD)}</TYPE.label>
                       </HideSmall>
                       <HideSmall>
                         <TYPE.label textAlign="end">{formatDollarAmount(t.tvlUSD)}</TYPE.label>
-                      </HideSmall>
-                      <HideSmall>
-                        <TYPE.label textAlign="end">{formatDollarAmount(t.priceUSD)}</TYPE.label>
                       </HideSmall>
                     </ResponsiveGrid>
                   </HoverRowLink>
@@ -349,6 +347,7 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
             <Break />
             <ResponsiveGrid>
               <TYPE.main>Pools</TYPE.main>
+              <HideSmall />
               <HideSmall>
                 <TYPE.main textAlign="end" fontSize="12px">
                   Volume 24H
@@ -357,11 +356,6 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               <HideSmall>
                 <TYPE.main textAlign="end" fontSize="12px">
                   TVL
-                </TYPE.main>
-              </HideSmall>
-              <HideSmall>
-                <TYPE.main textAlign="end" fontSize="12px">
-                  Price
                 </TYPE.main>
               </HideSmall>
             </ResponsiveGrid>
@@ -377,7 +371,6 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
                         <TYPE.label ml="10px" style={{ whiteSpace: 'nowrap' }}>
                           <HoverInlineText maxCharacters={12} text={`${p.token0.symbol} / ${p.token1.symbol}`} />
                         </TYPE.label>
-                        {/* <GreyBadge ml="10px">{feeTierPercent(p.feeTier)}</GreyBadge> */}
                         <SavedIcon
                           id="watchlist-icon"
                           size={'16px'}
@@ -389,16 +382,12 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
                           }}
                         />
                       </RowFixed>
+                      <HideSmall />
                       <HideSmall>
                         <TYPE.label textAlign="end">{formatDollarAmount(p.volumeUSD)}</TYPE.label>
                       </HideSmall>
                       <HideSmall>
                         <TYPE.label textAlign="end">{formatDollarAmount(p.tvlUSD)}</TYPE.label>
-                      </HideSmall>
-                      <HideSmall>
-                        {/* <TYPE.label textAlign="end">
-                          {formatDollarAmount(p.tiers[p.maxLiquidityTierIndex].token0Price)}
-                        </TYPE.label> */}
                       </HideSmall>
                     </ResponsiveGrid>
                   </HoverRowLink>
@@ -420,17 +409,17 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               <TYPE.main>Tiers</TYPE.main>
               <HideSmall>
                 <TYPE.main textAlign="end" fontSize="12px">
+                  Price
+                </TYPE.main>
+              </HideSmall>
+              <HideSmall>
+                <TYPE.main textAlign="end" fontSize="12px">
                   Volume 24H
                 </TYPE.main>
               </HideSmall>
               <HideSmall>
                 <TYPE.main textAlign="end" fontSize="12px">
                   TVL
-                </TYPE.main>
-              </HideSmall>
-              <HideSmall>
-                <TYPE.main textAlign="end" fontSize="12px">
-                  Price
                 </TYPE.main>
               </HideSmall>
             </ResponsiveGrid>
@@ -470,13 +459,13 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
                         />
                       </RowFixed>
                       <HideSmall>
+                        <TYPE.label textAlign="end">{formatDollarAmount(t.token0Price)}</TYPE.label>
+                      </HideSmall>
+                      <HideSmall>
                         <TYPE.label textAlign="end">{formatDollarAmount(t.volumeUSD)}</TYPE.label>
                       </HideSmall>
                       <HideSmall>
                         <TYPE.label textAlign="end">{formatDollarAmount(t.tvlUSD)}</TYPE.label>
-                      </HideSmall>
-                      <HideSmall>
-                        <TYPE.label textAlign="end">{formatDollarAmount(t.token0Price)}</TYPE.label>
                       </HideSmall>
                     </ResponsiveGrid>
                   </HoverRowLink>

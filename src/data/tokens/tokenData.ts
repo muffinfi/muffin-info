@@ -1,25 +1,20 @@
-import { getPercentChange } from './../../utils/data'
 import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
-import { useDeltaTimestamps } from 'utils/queries'
 import { useBlocksFromTimestamps } from 'hooks/useBlocksFromTimestamps'
-import { get2DayChange } from 'utils/data'
-import { TokenData } from 'state/tokens/reducer'
 import { useEthPrices } from 'hooks/useEthPrices'
-import { formatTokenSymbol, formatTokenName } from 'utils/tokens'
-import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 import { useMemo } from 'react'
+import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
+import { TokenData } from 'state/tokens/reducer'
+import { get2DayChange } from 'utils/data'
+import { useDeltaTimestamps } from 'utils/queries'
+import { formatTokenName, formatTokenSymbol } from 'utils/tokens'
+import { getPercentChange } from './../../utils/data'
 
 export const TOKENS_BULK = (block: number | undefined, tokens: string[]) => {
-  let tokenString = `[`
-  tokens.map((address) => {
-    return (tokenString += `"${address}",`)
-  })
-  tokenString += ']'
   const queryString =
     `
     query tokens {
-      tokens(where: {id_in: ${tokenString}},` +
+      tokens(where: {id_in: ${JSON.stringify(tokens)}},` +
     (block ? `block: {number: ${block}} ,` : ``) +
     ` orderBy: totalValueLockedUSD, orderDirection: desc, subgraphError: allow) {
         id

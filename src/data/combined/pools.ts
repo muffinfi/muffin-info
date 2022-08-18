@@ -9,15 +9,10 @@ import { useDeltaTimestamps } from 'utils/queries'
 import { formatTokenName, formatTokenSymbol } from 'utils/tokens'
 
 export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
-  let poolString = `[`
-  pools.map((address) => {
-    return (poolString += `"${address}",`)
-  })
-  poolString += ']'
   const queryString = `
     query pools {
       pools(
-        where: {id_in: ${poolString}},
+        where: {id_in: ${JSON.stringify(pools)}},
         ${block ? `block: {number: ${block}} ,` : ''}
         orderBy: totalValueLockedUSD,
         orderDirection: desc,

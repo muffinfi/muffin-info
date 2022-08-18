@@ -8,6 +8,7 @@ import React, { memo, ReactNode, useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import styled from 'styled-components/macro'
 import { VolumeWindow } from 'types'
+import { unixToDate } from 'utils/date'
 import { formatDollarAmount } from 'utils/numbers'
 import Legend from './Legend'
 import { MergedTimeSeriesDatum, TimeSeriesDatum, TimeSeriesHoverHandler } from './types'
@@ -81,7 +82,7 @@ const Chart = ({
           <CartesianGrid horizontal vertical={false} stroke={gridLineColor} strokeDasharray="3 3" />
           <XAxis
             dataKey="time"
-            tickFormatter={(time) => dayjs.unix(time).format(activeWindow === VolumeWindow.monthly ? 'MMM' : 'MMM D')}
+            tickFormatter={(time) => unixToDate(time, activeWindow === VolumeWindow.monthly ? 'MMM' : 'MMM D')}
             minTickGap={10}
             axisLine={{ stroke: xAxisColor }}
             tickLine={{ stroke: xAxisColor }}

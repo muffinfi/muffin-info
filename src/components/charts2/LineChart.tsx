@@ -7,6 +7,7 @@ import { darken, transparentize } from 'polished'
 import React, { memo, ReactNode, useMemo } from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import styled from 'styled-components/macro'
+import { unixToDate } from 'utils/date'
 import { formatAmount, formatDollarAmount } from 'utils/numbers'
 import Legend from './Legend'
 import { MergedTimeSeriesDatum, TimeSeriesDatum, TimeSeriesHoverHandler } from './types'
@@ -97,7 +98,7 @@ function Chart({
           <CartesianGrid horizontal vertical={false} stroke={gridLineColor} strokeDasharray="3 3" />
           <XAxis
             dataKey="time" //
-            tickFormatter={(time) => dayjs.unix(time).format('MMM D')}
+            tickFormatter={(time) => unixToDate(time, 'MMM D')}
             minTickGap={10}
             axisLine={{ stroke: xAxisColor }}
             tickLine={{ stroke: xAxisColor }}
