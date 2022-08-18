@@ -6,6 +6,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Row, { RowFixed } from 'components/Row'
 import { useFetchSearchResults } from 'data/search'
+import useDebounce from 'hooks/useDebounce'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Hotkeys from 'react-hot-keys'
 import { useHistory } from 'react-router-dom'
@@ -182,15 +183,12 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
   const [focused, setFocused] = useState<boolean>(false)
   const [showMenu, setShowMenu] = useState(false)
   const [value, setValue] = useState('')
+  const debouncedValue = useDebounce(value, 200)
 
-  const { tokens, pools, tiers } = useFetchSearchResults(value)
+  const { tokens, pools, tiers } = useFetchSearchResults(debouncedValue)
 
   useEffect(() => {
-    if (value !== '') {
-      setFocused(true)
-    } else {
-      setFocused(false)
-    }
+    setFocused(value !== '')
   }, [value])
 
   const [tokensShown, setTokensShown] = useState(3)
