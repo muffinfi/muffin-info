@@ -1,7 +1,7 @@
 import { createAction } from '@reduxjs/toolkit'
 import { SupportedNetwork } from 'constants/networks'
 import { Transaction } from 'types'
-import { TickProcessed } from '../../data/tiers/tickData'
+import type { TierTickData } from '../../data/tiers/tickData'
 import type { TierChartEntry, TierData, TierKey } from './reducer'
 
 // protocol wide info
@@ -24,13 +24,6 @@ export const updateTransactions = createAction<{
 
 export const updateTickData = createAction<{
   key: TierKey
-  tickData:
-    | {
-        ticksProcessed: TickProcessed[]
-        feeTier: string
-        tickSpacing: number
-        activeTickIdx: number
-      }
-    | undefined
+  tickData: TierTickData | undefined
   networkId: SupportedNetwork
 }>('tiers/updateTickData')

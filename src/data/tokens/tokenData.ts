@@ -24,7 +24,7 @@ export const TOKENS_BULK = (block: number | undefined, tokens: string[]) => {
         volumeUSD
         volume
         txCount
-        totalValueLocked
+        amountLocked
         feesUSD
         totalValueLockedUSD
       }
@@ -42,7 +42,7 @@ interface TokenFields {
   volume: string
   feesUSD: string
   txCount: string
-  totalValueLocked: string
+  amountLocked: string
   totalValueLockedUSD: string
 }
 
@@ -167,7 +167,7 @@ export function useFetchedTokenDatas(
           : 0
       const tvlUSD = current ? parseFloat(current.totalValueLockedUSD) : 0
       const tvlUSDChange = getPercentChange(current?.totalValueLockedUSD, oneDay?.totalValueLockedUSD)
-      const tvlToken = current ? parseFloat(current.totalValueLocked) : 0
+      const tvlToken = current ? parseFloat(current.amountLocked) : 0
       const priceUSD = ethPrices && current ? parseFloat(current.derivedETH) * ethPrices.current : 0
       const priceUSDOneDay = ethPrices && oneDay ? parseFloat(oneDay.derivedETH) * ethPrices.oneDay : 0
       const priceUSDWeek = ethPrices && week ? parseFloat(week.derivedETH) * ethPrices.week : 0

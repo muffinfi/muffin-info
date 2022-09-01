@@ -5,7 +5,7 @@ import ChartLabel, { useHandleHoverData } from 'components/charts2/ChartLabel'
 import LineChart from 'components/charts2/LineChart'
 import { TimeSeriesDatum } from 'components/charts2/types'
 import { AutoColumn } from 'components/Column'
-import DensityChart from 'components/DensityChart/alt'
+import DensityChart from 'components/echarts/DensityChart'
 import Loader from 'components/Loader'
 import { RowBetween } from 'components/Row'
 import { ArbitrumNetworkInfo, NetworkInfo } from 'constants/networks'
@@ -42,6 +42,7 @@ interface TierChartsProps {
 
 export default function TierCharts({ tierKey, color, activeNetwork, tierData }: TierChartsProps) {
   const chartData = useTierChartData(tierKey)
+  const tierKeys = useMemo(() => [tierKey], [tierKey])
 
   // chart data
   const { tvlData, volumeData, feesUSD } = useMemo(() => {
@@ -101,7 +102,7 @@ export default function TierCharts({ tierKey, color, activeNetwork, tierData }: 
   return (
     <Layout>
       <DarkGreyCard>
-        Volume 24h
+        Volume (Daily)
         <ChartLabel value={volumeHandler.value} valueUnit={'USD'} valueLabel={volumeHandler.valueLabel} />
         <BarChart data={volumeData} color={color} height={270} onHoverData={volumeHandler.handleHoverData} />
       </DarkGreyCard>
@@ -113,7 +114,7 @@ export default function TierCharts({ tierKey, color, activeNetwork, tierData }: 
       </DarkGreyCard>
 
       <DarkGreyCard>
-        Fees 24h
+        Fees (Daily)
         <ChartLabel value={feesHandler.value} valueUnit={'USD'} valueLabel={feesHandler.valueLabel} />
         <BarChart data={feesUSD} color={color} height={270} onHoverData={feesHandler.handleHoverData} />
       </DarkGreyCard>
@@ -142,8 +143,11 @@ export default function TierCharts({ tierKey, color, activeNetwork, tierData }: 
 
       {activeNetwork === ArbitrumNetworkInfo ? null : (
         <WideDarkGreyCard>
-          Liquidity
-          <DensityChart tierKey={tierKey} />
+          <RowBetween align="flex-start">
+            Liquidity
+            <SmallOptionButton onClick={toggleBase}>Use {symbolQuote} as base</SmallOptionButton>
+          </RowBetween>
+          <DensityChart tierKeys={tierKeys} isToken0Base={isToken0Base} />
         </WideDarkGreyCard>
       )}
     </Layout>

@@ -5,6 +5,7 @@ import ChartLabel, { useHandleHoverData } from 'components/charts2/ChartLabel'
 import LineChart from 'components/charts2/LineChart'
 import { TimeSeriesDatum, TimeSeriesHoverHandler } from 'components/charts2/types'
 import { AutoColumn } from 'components/Column'
+import DensityChart from 'components/echarts/DensityChart'
 import Loader from 'components/Loader'
 import { RowBetween } from 'components/Row'
 import useToggle from 'hooks/useToggle'
@@ -26,12 +27,12 @@ const Layout = styled.div`
   `};
 `
 
-// const WideDarkGreyCard = styled(DarkGreyCard)`
-//   grid-column-end: span 2;
-//   ${({ theme }) => theme.mediaWidth.upToSmall`
-//     grid-column-end: span 1;
-//   `};
-// `
+const WideDarkGreyCard = styled(DarkGreyCard)`
+  grid-column-end: span 2;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-column-end: span 1;
+  `};
+`
 
 const sumLastValues = (dataList: TimeSeriesDatum[][]) => {
   return dataList
@@ -189,10 +190,13 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
         />
       </DarkGreyCard>
 
-      {/* <WideDarkGreyCard>
-        Liquidity
-        <DensityChart tierKey={tierKey} />
-      </WideDarkGreyCard> */}
+      <WideDarkGreyCard>
+        <RowBetween align="flex-start">
+          Liquidity
+          <SmallOptionButton onClick={toggleBase}>Use {symbolQuote} as base</SmallOptionButton>
+        </RowBetween>
+        <DensityChart tierKeys={tierKeys} isToken0Base={isToken0Base} />
+      </WideDarkGreyCard>
     </Layout>
   )
 }

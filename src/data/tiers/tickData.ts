@@ -28,8 +28,10 @@ const SURROUNDING_TICKS = gql`
 `
 
 interface TickPool {
-  tick: string
-  feeTier: string
+  tick: number
+  feeTier: number
+  sqrtPrice: string
+  liquidity: string
   token0: {
     symbol: string
     id: string
@@ -43,8 +45,6 @@ interface TickPool {
   pool: {
     tickSpacing: number
   }
-  sqrtPrice: string
-  liquidity: string
 }
 
 interface TierResult {
@@ -95,8 +95,6 @@ const fetchInitializedTicks = async (
       },
     })
 
-    console.log({ data, error, loading }, 'Result. Skip: ' + skip)
-
     if (loading) {
       continue
     }
@@ -115,7 +113,7 @@ const fetchInitializedTicks = async (
 
 export interface TierTickData {
   ticksProcessed: TickProcessed[]
-  feeTier: string
+  feeTier: number
   tickSpacing: number
   activeTickIdx: number
 }
@@ -124,6 +122,10 @@ const TIER = gql`
   query tier($id: String!) {
     tier(id: $id) {
       tick
+      feeTier
+      sqrtGamma
+      sqrtPrice
+      liquidity
       token0 {
         symbol
         id
@@ -137,10 +139,6 @@ const TIER = gql`
       pool {
         tickSpacing
       }
-      feeTier
-      sqrtGamma
-      sqrtPrice
-      liquidity
     }
   }
 `
@@ -179,12 +177,11 @@ export const fetchTicksSurroundingPrice = async (
     },
   } = tierResult
 
-  const poolCurrentTickIdx = parseInt(poolCurrentTick)
   const tickSpacing = tierResult.tier.pool.tickSpacing
 
   // The pools current tick isn't necessarily a tick that can actually be initialized.
   // Find the nearest valid tick given the tick spacing.
-  const activeTickIdx = Math.floor(poolCurrentTickIdx / tickSpacing) * tickSpacing
+  const activeTickIdx = Math.floor(poolCurrentTick / tickSpacing) * tickSpacing
 
   // Our search bounds must take into account fee spacing. i.e. for fee tier 1%, only
   // ticks with index 200, 400, 600, etc can be active.

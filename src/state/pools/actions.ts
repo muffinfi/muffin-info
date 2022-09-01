@@ -27,7 +27,7 @@ export const updateTickData = createAction<{
   tickData:
     | {
         ticksProcessed: TickProcessed[]
-        feeTier: string
+        feeTier: number
         tickSpacing: number
         activeTickIdx: number
       }

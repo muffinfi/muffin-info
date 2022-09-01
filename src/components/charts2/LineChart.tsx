@@ -85,19 +85,21 @@ function Chart({
 
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={mergedData} margin={{ top: 10, right: 3, left: 3, bottom: 0 }}>
-          {dataList.map((_, i) =>
-            colors[i] != null ? (
-              <defs key={colors[i]}>
-                <linearGradient id={`gradient-${i}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={darken(0.35, colors[i])} stopOpacity={0.5} />
-                  <stop offset="100%" stopColor={colors[i]} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-            ) : null
+          {stack && (
+            <defs>
+              {dataList.map((_, i) =>
+                colors[i] == null ? null : (
+                  <linearGradient key={colors[i]} id={`gradient-${i}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={darken(0.35, colors[i])} stopOpacity={0.5} />
+                    <stop offset="100%" stopColor={colors[i]} stopOpacity={0} />
+                  </linearGradient>
+                )
+              )}
+            </defs>
           )}
           <CartesianGrid horizontal vertical={false} stroke={gridLineColor} strokeDasharray="3 3" />
           <XAxis
-            dataKey="time" //
+            dataKey="time"
             tickFormatter={(time) => unixToDate(time, 'MMM D')}
             minTickGap={10}
             axisLine={{ stroke: xAxisColor }}

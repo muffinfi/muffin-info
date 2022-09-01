@@ -1,5 +1,5 @@
 import { fetchTierChartData } from 'data/tiers/chartData'
-import { TierTickData } from 'data/tiers/tickData'
+import { fetchTicksSurroundingPrice, TierTickData } from 'data/tiers/tickData'
 import { fetchTierTransactions } from 'data/tiers/transactions'
 import { useMemoArray, useMemoArrayOptional } from 'hooks/useMemoArray'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -176,9 +176,9 @@ export function useTierChartDataList(
 
   useEffect(() => {
     if (normalizedKeysNoData.length > 0 && !loading && !error) {
+      setLoading(true)
       ;(async function fetch() {
         try {
-          setLoading(true)
           const promises = normalizedKeysNoData.map((normalizedKey) => fetchTierChartData(normalizedKey, dataClient))
           const fetched = await Promise.all(promises)
 
@@ -201,4 +201,58 @@ export function useTierChartDataList(
   }, [dispatch, loading, error, chartDataList, dataClient, activeNetwork.id, normalizedKeysNoData])
 
   return { loading, chartDataList }
+}
+
+/**
+ * Batch fetch tick data
+ */
+const TICKS_TO_FETCH = 1000
+export function useTierTickDataList(keys: TierKey[] | undefined) {
+  const dispatch = useDispatch<AppDispatch>()
+  const [activeNetwork] = useActiveNetworkVersion()
+
+  const normalizedKeys = useMemo(() => keys?.map((key) => normalizeKey(key)) ?? [], [keys])
+  const tiers = useMemoArray(
+    useSelector((state: AppState) =>
+      normalizedKeys.map((normalizedKey) => state.tiers.byKey[activeNetwork.id]?.[normalizedKey])
+    )
+  )
+  const tickDataList = useMemo(() => tiers.map((tier) => tier?.tickData), [tiers])
+  const normalizedKeysNoData = useMemo(() => normalizedKeys.filter((_normalizedKey, i) => tickDataList[i] == null), [
+    normalizedKeys,
+    tickDataList,
+  ])
+
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const { dataClient } = useClients()
+
+  useEffect(() => {
+    if (normalizedKeysNoData.length > 0 && !loading && !error) {
+      setLoading(true)
+      ;(async function fetch() {
+        try {
+          const promises = normalizedKeysNoData.map((normalizedKey) =>
+            fetchTicksSurroundingPrice(normalizedKey, dataClient, TICKS_TO_FETCH)
+          )
+          const fetched = await Promise.all(promises)
+
+          fetched.forEach(({ error, data }, i) => {
+            if (error) {
+              setError(error)
+            } else if (data) {
+              dispatch(updateTickData({ key: normalizedKeysNoData[i], tickData: data, networkId: activeNetwork.id }))
+            }
+          })
+          setLoading(false)
+        } catch (error) {
+          console.error(error)
+          setError(true)
+          setLoading(false)
+        }
+      })()
+    }
+  }, [dispatch, loading, error, tickDataList, dataClient, activeNetwork.id, normalizedKeysNoData])
+
+  return { loading, tickDataList, error }
 }

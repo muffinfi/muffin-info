@@ -1,4 +1,4 @@
-import { TimeSeriesDatum, MergedTimeSeriesDatum } from './types'
+import { MergedTimeSeriesDatum, TimeSeriesDatum } from './types'
 
 /**
  * Merge a list of time series data into one merged series.
@@ -14,8 +14,16 @@ import { TimeSeriesDatum, MergedTimeSeriesDatum } from './types'
 export const mergeTimeSeriesData = (
   dataList: TimeSeriesDatum[][],
   ascending: boolean,
-  initialEmptyValue: number | undefined
+  initialEmptyValue?: number | undefined
 ): MergedTimeSeriesDatum[] => {
+  if (dataList.length === 0) return []
+  if (dataList.length === 1) {
+    return dataList[0].map((data) => ({
+      time: data.time,
+      values: [data.value],
+      metadatas: [data.metadata],
+    }))
+  }
   const sortedDataList = dataList.map((data) =>
     [...data].sort((a, b) => (a.time < b.time ? -1 : 1) * (ascending ? 1 : -1))
   )
@@ -48,7 +56,7 @@ export const mergeTimeSeriesData = (
   return mergedData
 }
 
-export const cleanData = (data: TimeSeriesDatum[] | TimeSeriesDatum[][], initialEmptyValue: number | undefined) => {
+export const cleanData = (data: TimeSeriesDatum[] | TimeSeriesDatum[][], initialEmptyValue?: number | undefined) => {
   const dataList = (Array.isArray(data[0]) ? data : [data]) as TimeSeriesDatum[][]
   const mergedData = mergeTimeSeriesData(dataList, true, initialEmptyValue)
   return { dataList, mergedData }

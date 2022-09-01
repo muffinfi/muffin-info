@@ -49,8 +49,8 @@ export const POOLS_BULK = (block: number | undefined, pools: string[]) => {
         volumeUSD
         feesUSD
         txCount
-        totalValueLockedToken0
-        totalValueLockedToken1
+        amount0
+        amount1
         totalValueLockedUSD
       }
     }
@@ -77,13 +77,13 @@ interface PoolFields {
   }
   tiers: {
     tierId: number
-    sqrtGamma: string
-    feeTier: string
+    sqrtGamma: number
+    feeTier: number
     liquidity: string
     sqrtPrice: string
-    tick: string
-    nextTickAbove: string
-    nextTickBelow: string
+    tick: number
+    nextTickAbove: number
+    nextTickBelow: number
     token0Price: string
     token1Price: string
   }[]
@@ -91,8 +91,8 @@ interface PoolFields {
   volumeUSD: string
   feesUSD: string
   txCount: string
-  totalValueLockedToken0: string
-  totalValueLockedToken1: string
+  amount0: string
+  amount1: string
   totalValueLockedUSD: string
 }
 
@@ -209,8 +209,8 @@ export function usePoolDatas(
                   100
                 : 0
 
-            const tvlToken0 = current ? parseFloat(current.totalValueLockedToken0) : 0
-            const tvlToken1 = current ? parseFloat(current.totalValueLockedToken1) : 0
+            const tvlToken0 = current ? parseFloat(current.amount0) : 0
+            const tvlToken1 = current ? parseFloat(current.amount1) : 0
 
             if (!current) return accum
 
@@ -232,14 +232,14 @@ export function usePoolDatas(
               },
               tiers: current.tiers.map((tier) => ({
                 tierId: tier.tierId,
-                feeTier: parseInt(tier.feeTier),
-                tick: parseFloat(tier.tick),
-                nextTickAbove: parseFloat(tier.nextTickAbove),
-                nextTickBelow: parseFloat(tier.nextTickBelow),
+                feeTier: tier.feeTier,
+                tick: tier.tick,
+                nextTickAbove: tier.nextTickAbove,
+                nextTickBelow: tier.nextTickBelow,
                 token0Price: parseFloat(tier.token0Price),
                 token1Price: parseFloat(tier.token1Price),
                 liquidity: parseFloat(tier.liquidity),
-                sqrtGamma: parseFloat(tier.sqrtGamma),
+                sqrtGamma: tier.sqrtGamma,
                 sqrtPrice: parseFloat(tier.sqrtPrice),
               })),
               tickSpacing: current.tickSpacing,
