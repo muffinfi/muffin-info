@@ -96,12 +96,17 @@ const getUrlSubdomain = () => {
   return parts.length > 2 ? parts[0] : ''
 }
 
-export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] =
-  process.env.REACT_APP_IS_TESTNET || getUrlSubdomain().includes('testnet')
-    ? [RinkebyNetworkInfo, GoerliNetworkInfo]
-    : [
-        EthereumNetworkInfo,
-        // PolygonNetworkInfo,
-        // OptimismNetworkInfo,
-        // ArbitrumNetworkInfo,
-      ]
+const isTestnet = () => {
+  if (process.env.REACT_APP_IS_TESTNET == 'true' || process.env.REACT_APP_IS_TESTNET == '1') return true
+  if (getUrlSubdomain().includes('testnet')) return true
+  return false
+}
+
+export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = isTestnet()
+  ? [RinkebyNetworkInfo, GoerliNetworkInfo]
+  : [
+      EthereumNetworkInfo,
+      // PolygonNetworkInfo,
+      // OptimismNetworkInfo,
+      // ArbitrumNetworkInfo,
+    ]

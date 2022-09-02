@@ -38,15 +38,13 @@ export const healthClient = new ApolloClient({
 })
 
 export const blockClient = new ApolloClient({
-  // uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
-  uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/rinkeby-blocks', // FIXME: temp
+  uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
   cache: new InMemoryCache(),
   ...clientSettings('no-cache'),
 })
 
 export const client = new ApolloClient({
-  // uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-subgraph',
-  uri: 'https://api.thegraph.com/subgraphs/name/virtues-milkier/muffin-rinkeby', // FIXME: temp
+  uri: 'https://api.thegraph.com/subgraphs/name/muffinfi/muffin-mainnet',
   cache: createMuffinSubgraphCache(),
   ...clientSettings('no-cache'),
 })
