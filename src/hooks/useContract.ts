@@ -64,6 +64,7 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
       case SupportedChainId.MAINNET:
       case SupportedChainId.ROPSTEN:
       case SupportedChainId.RINKEBY:
+      case SupportedChainId.GOERLI:
         address = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
         break
     }

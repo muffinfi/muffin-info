@@ -4,6 +4,8 @@ import {
   arbitrumClient,
   blockClient,
   client,
+  goerliBlockClient,
+  goerliClient,
   optimismBlockClient,
   optimismClient,
   polygonBlockClient,
@@ -138,6 +140,8 @@ export function useDataClient(): ApolloClient<NormalizedCacheObject> {
       return polygonClient
     case SupportedNetwork.RINKEBY:
       return rinkebyClient
+    case SupportedNetwork.GOERLI:
+      return goerliClient
     default:
       return client
   }
@@ -157,6 +161,8 @@ export function useBlockClient(): ApolloClient<NormalizedCacheObject> {
       return polygonBlockClient
     case SupportedNetwork.RINKEBY:
       return rinkebyBlockClient
+    case SupportedNetwork.GOERLI:
+      return goerliBlockClient
     default:
       return blockClient
   }

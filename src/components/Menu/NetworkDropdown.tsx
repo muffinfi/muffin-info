@@ -1,6 +1,11 @@
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed } from 'components/Row'
-import { PolygonNetworkInfo, RinkebyNetworkInfo, SUPPORTED_NETWORK_VERSIONS } from 'constants/networks'
+import {
+  PolygonNetworkInfo,
+  RinkebyNetworkInfo,
+  GoerliNetworkInfo,
+  SUPPORTED_NETWORK_VERSIONS,
+} from 'constants/networks'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import React, { useRef, useState } from 'react'
@@ -111,7 +116,8 @@ export default function NetworkDropdown() {
             </TYPE.main>
             {activeNetwork === EthereumNetworkInfo ||
             activeNetwork === PolygonNetworkInfo ||
-            activeNetwork === RinkebyNetworkInfo ? null : (
+            activeNetwork === RinkebyNetworkInfo ||
+            activeNetwork === GoerliNetworkInfo ? null : (
               <Badge bgColor={activeNetwork.primaryColor} style={{ margin: '0 4px' }}>
                 L2
               </Badge>

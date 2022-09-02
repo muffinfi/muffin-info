@@ -71,6 +71,7 @@ export const initialState: TokensState = {
     [SupportedNetwork.OPTIMISM]: {},
     [SupportedNetwork.POLYGON]: {},
     [SupportedNetwork.RINKEBY]: {},
+    [SupportedNetwork.GOERLI]: {},
   },
 }
 

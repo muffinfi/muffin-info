@@ -6,6 +6,7 @@ const MULTICALL_NETWORKS: { [chainId: number]: string } = {
   [SupportedChainId.ROPSTEN]: '0x53C43764255c17BD724F74c4eF150724AC50a3ed',
   [SupportedChainId.KOVAN]: '0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A',
   [SupportedChainId.RINKEBY]: '0x42Ad527de7d4e9d9d011aC45B31D8551f8Fe9821',
+  [SupportedChainId.GOERLI]: '0x77dca2c955b15e9de4dbbcf1246b4b85b651e50e',
 }
 
 export { MULTICALL_ABI, MULTICALL_NETWORKS }

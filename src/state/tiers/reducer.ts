@@ -102,6 +102,7 @@ export const initialState: TiersState = {
     [SupportedNetwork.OPTIMISM]: {},
     [SupportedNetwork.POLYGON]: {},
     [SupportedNetwork.RINKEBY]: {},
+    [SupportedNetwork.GOERLI]: {},
   },
 }
 

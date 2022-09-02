@@ -98,3 +98,15 @@ export const rinkebyBlockClient = new ApolloClient({
   cache: new InMemoryCache(),
   ...clientSettings('no-cache'),
 })
+
+export const goerliClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/dkenw/muffin-goerli',
+  cache: createMuffinSubgraphCache(),
+  ...clientSettings('no-cache'),
+})
+
+export const goerliBlockClient = new ApolloClient({
+  uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/goerli-blocks',
+  cache: new InMemoryCache(),
+  ...clientSettings('no-cache'),
+})

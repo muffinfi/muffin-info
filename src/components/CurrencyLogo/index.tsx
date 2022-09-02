@@ -43,6 +43,7 @@ export default function CurrencyLogo({
   const arbitrumList = useCombinedActiveList()?.[42161]
   const polygon = useCombinedActiveList()?.[137]
   const rinkebyList = useCombinedActiveList()?.[4]
+  const goerliList = useCombinedActiveList()?.[5]
 
   const [activeNetwork] = useActiveNetworkVersion()
 
@@ -80,6 +81,14 @@ export default function CurrencyLogo({
   }, [checkSummed, rinkebyList])
   const uriLocationsRinkeby = useHttpLocations(rinkebyURI)
 
+  const goerliURI = useMemo(() => {
+    if (checkSummed && goerliList?.[checkSummed]) {
+      return goerliList?.[checkSummed].token.logoURI
+    }
+    return undefined
+  }, [checkSummed, goerliList])
+  const uriLocationsGoerli = useHttpLocations(goerliURI)
+
   //temp until token logo issue merged
   const tempSources: { [address: string]: string } = useMemo(() => {
     return {
@@ -95,6 +104,7 @@ export default function CurrencyLogo({
       const override = tempSources[address]
       return [
         ...uriLocationsRinkeby,
+        ...uriLocationsGoerli,
         ...(activeNetwork === EthereumNetworkInfo ? [getTokenLogoURL(checkSummed)] : []),
         ...uriLocationsOptimism,
         ...uriLocationsArbitrum,
@@ -111,6 +121,7 @@ export default function CurrencyLogo({
     uriLocationsOptimism,
     uriLocationsPOlygon,
     uriLocationsRinkeby,
+    uriLocationsGoerli,
     activeNetwork,
   ])
 

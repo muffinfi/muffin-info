@@ -9,6 +9,7 @@ export enum SupportedNetwork {
   OPTIMISM,
   POLYGON,
   RINKEBY,
+  GOERLI,
 }
 
 export type NetworkInfo = {
@@ -78,6 +79,18 @@ export const RinkebyNetworkInfo: NetworkInfo = {
   testnet: true,
 }
 
+export const GoerliNetworkInfo: NetworkInfo = {
+  id: SupportedNetwork.GOERLI,
+  route: 'goerli',
+  name: 'Goerli',
+  bgColor: '#F94903',
+  primaryColor: '#F94903',
+  secondaryColor: '#2172E5',
+  imageURL: ETHEREUM_LOGO_URL,
+  blurb: 'Testnet',
+  testnet: true,
+}
+
 const getUrlSubdomain = () => {
   const parts = window.location.hostname.split('.')
   return parts.length > 2 ? parts[0] : ''
@@ -85,7 +98,7 @@ const getUrlSubdomain = () => {
 
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] =
   process.env.REACT_APP_IS_TESTNET || getUrlSubdomain().includes('testnet')
-    ? [RinkebyNetworkInfo]
+    ? [RinkebyNetworkInfo, GoerliNetworkInfo]
     : [
         EthereumNetworkInfo,
         // PolygonNetworkInfo,
