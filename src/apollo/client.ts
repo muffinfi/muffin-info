@@ -1,4 +1,36 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { ApolloClient, ErrorPolicy, FetchPolicy, InMemoryCache, WatchQueryFetchPolicy } from '@apollo/client'
+
+const clientSettings = (policy: FetchPolicy) => {
+  return {
+    queryDeduplication: true,
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: policy as WatchQueryFetchPolicy,
+      },
+      query: {
+        fetchPolicy: policy,
+        errorPolicy: 'all' as ErrorPolicy,
+      },
+    },
+  }
+}
+
+const createMuffinSubgraphCache = () => {
+  return new InMemoryCache({
+    typePolicies: {
+      Token: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+      Pool: {
+        // Singleton types that have no identifying field can use an empty
+        // array for their keyFields.
+        keyFields: false,
+      },
+    },
+  })
+}
 
 export const healthClient = new ApolloClient({
   uri: 'https://api.thegraph.com/index-node/graphql',
@@ -9,215 +41,60 @@ export const blockClient = new ApolloClient({
   // uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
   uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/rinkeby-blocks', // FIXME: temp
   cache: new InMemoryCache(),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'no-cache',
-    },
-    query: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'all',
-    },
-  },
+  ...clientSettings('no-cache'),
 })
 
 export const client = new ApolloClient({
   // uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-subgraph',
   uri: 'https://api.thegraph.com/subgraphs/name/virtues-milkier/muffin-rinkeby', // FIXME: temp
-  cache: new InMemoryCache({
-    typePolicies: {
-      Token: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
-        keyFields: false,
-      },
-      Pool: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
-        keyFields: false,
-      },
-    },
-  }),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'no-cache',
-    },
-    query: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'all',
-    },
-  },
+  cache: createMuffinSubgraphCache(),
+  ...clientSettings('no-cache'),
 })
 
 export const arbitrumClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-dev',
-  cache: new InMemoryCache({
-    typePolicies: {
-      Token: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
-        keyFields: false,
-      },
-      Pool: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
-        keyFields: false,
-      },
-    },
-  }),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'cache-first',
-    },
-    query: {
-      fetchPolicy: 'cache-first',
-      errorPolicy: 'all',
-    },
-  },
+  cache: createMuffinSubgraphCache(),
+  ...clientSettings('cache-first'),
 })
 
 export const arbitrumBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-one-blocks',
   cache: new InMemoryCache(),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'cache-first',
-    },
-    query: {
-      fetchPolicy: 'cache-first',
-      errorPolicy: 'all',
-    },
-  },
+  ...clientSettings('cache-first'),
 })
 
 export const optimismClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis',
-  cache: new InMemoryCache({
-    typePolicies: {
-      Token: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
-        keyFields: false,
-      },
-      Pool: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
-        keyFields: false,
-      },
-    },
-  }),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'no-cache',
-    },
-    query: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'all',
-    },
-  },
+  cache: createMuffinSubgraphCache(),
+  ...clientSettings('no-cache'),
 })
 
 export const optimismBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uni-testing-subgraph',
   cache: new InMemoryCache(),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'cache-first',
-    },
-    query: {
-      fetchPolicy: 'cache-first',
-      errorPolicy: 'all',
-    },
-  },
+  ...clientSettings('cache-first'),
 })
 
 export const polygonClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon',
-  cache: new InMemoryCache({
-    typePolicies: {
-      Token: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
-        keyFields: false,
-      },
-      Pool: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
-        keyFields: false,
-      },
-    },
-  }),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'no-cache',
-    },
-    query: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'all',
-    },
-  },
+  cache: createMuffinSubgraphCache(),
+  ...clientSettings('no-cache'),
 })
 
 export const polygonBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/polygon-blocks',
   cache: new InMemoryCache(),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'cache-first',
-    },
-    query: {
-      fetchPolicy: 'cache-first',
-      errorPolicy: 'all',
-    },
-  },
+  ...clientSettings('cache-first'),
 })
 
 export const rinkebyClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/virtues-milkier/muffin-rinkeby',
-  cache: new InMemoryCache({
-    typePolicies: {
-      Token: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
-        keyFields: false,
-      },
-      Pool: {
-        // Singleton types that have no identifying field can use an empty
-        // array for their keyFields.
-        keyFields: false,
-      },
-    },
-  }),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'no-cache',
-    },
-    query: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'all',
-    },
-  },
+  cache: createMuffinSubgraphCache(),
+  ...clientSettings('no-cache'),
 })
 
 export const rinkebyBlockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/rinkeby-blocks',
   cache: new InMemoryCache(),
-  queryDeduplication: true,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'no-cache',
-    },
-    query: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'all',
-    },
-  },
+  ...clientSettings('no-cache'),
 })
