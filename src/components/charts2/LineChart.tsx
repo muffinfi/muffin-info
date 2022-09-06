@@ -3,7 +3,7 @@ import { RowBetween } from 'components/Row'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import useTheme from 'hooks/useTheme'
-import { darken, transparentize } from 'polished'
+import { transparentize } from 'polished'
 import React, { memo, ReactNode, useMemo } from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import styled from 'styled-components/macro'
@@ -90,8 +90,8 @@ function Chart({
               {dataList.map((_, i) =>
                 colors[i] == null ? null : (
                   <linearGradient key={colors[i]} id={`gradient-${i}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={darken(0.35, colors[i])} stopOpacity={0.5} />
-                    <stop offset="100%" stopColor={colors[i]} stopOpacity={0} />
+                    <stop offset="0%" stopColor={colors[i]} stopOpacity={1} />
+                    <stop offset="100%" stopColor={colors[i]} stopOpacity={0.5} />
                   </linearGradient>
                 )
               )}
@@ -128,6 +128,7 @@ function Chart({
               type="monotone"
               stroke={transparentize(0, colors[i % colors.length])}
               fill={stack ? `url(#gradient-${i % colors.length})` : 'rgba(0,0,0,0)'}
+              fillOpacity={0.7}
               strokeWidth={dataList.length > 1 ? 1 : 2}
               isAnimationActive={false}
             />
