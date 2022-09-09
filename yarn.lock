@@ -2703,22 +2703,22 @@
   resolved "https://registry.yarnpkg.com/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz#af577b477c683fad17c619a78208cede06f9605c"
   integrity sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q==
 
-"@muffinfi/muffin-contracts@^1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@muffinfi/muffin-contracts/-/muffin-contracts-1.0.11.tgz#450964e519c7e3ba33d151b825e2a50753ad2ca3"
-  integrity sha512-mGDpAkJEMD0SLUwt60F9epo+YNg0lTaWCGwEzQkpaShFFDnB6jSIT44KHzh9FIrTG0axG3jj+VJ2TPPdfufBzw==
+"@muffinfi/muffin-contracts@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@muffinfi/muffin-contracts/-/muffin-contracts-1.0.14.tgz#f038e7e8ac56161972400dce3f8d72cf81ffece9"
+  integrity sha512-tDs8+oHGNkDDO5l6HkcD7EyeYr9m/C86F9o7BbOMpxxreVcmqg4p3xRUsumg3mAHm2ASxVWQbPpWxEcCRP77gw==
   dependencies:
     "@openzeppelin/contracts" "4.3.1"
 
-"@muffinfi/muffin-sdk@^1.0.4-alpha.1":
-  version "1.0.4-alpha.1"
-  resolved "https://registry.yarnpkg.com/@muffinfi/muffin-sdk/-/muffin-sdk-1.0.4-alpha.1.tgz#dde5c067b72cdbd6b60228ba093e7a4bfe86eb3b"
-  integrity sha512-sG3VatEIERevL5Ma35de5k+IPIhv3UaotlWKJ3pxsF4QJ4FtYvu8is5W6HwXf9NUvnBUVXOQNOzweBZ9s5XZbg==
+"@muffinfi/muffin-sdk@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@muffinfi/muffin-sdk/-/muffin-sdk-1.0.5.tgz#ef41ff8c417cd78bf1f6373660b1eb9a81314aad"
+  integrity sha512-ib0ffPaWa2mwlyfA3i7J1Skj8D7c6lFQaYHH5PcJmDS8dUUV/baFWD2tXf5DOc0cMcTCvyaH/lX1XCNHAEzMjQ==
   dependencies:
     "@ethersproject/abi" "^5.5.0"
     "@ethersproject/contracts" "^5.5.0"
     "@ethersproject/solidity" "^5.5.0"
-    "@muffinfi/muffin-contracts" "^1.0.11"
+    "@muffinfi/muffin-contracts" "^1.0.14"
     "@uniswap/sdk-core" "^3.0.1"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
