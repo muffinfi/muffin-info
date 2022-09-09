@@ -110,7 +110,7 @@ export default function TierCharts({ tierKey, color, activeNetwork, tierData }: 
       <DarkGreyCard>
         TVL
         <ChartLabel value={tvlHandler.value} valueUnit={'USD'} valueLabel={tvlHandler.valueLabel} />
-        <LineChart data={tvlData} color={color} height={270} onHoverData={tvlHandler.handleHoverData} />
+        <LineChart data={tvlData} filled color={color} height={270} onHoverData={tvlHandler.handleHoverData} />
       </DarkGreyCard>
 
       <DarkGreyCard>

@@ -156,7 +156,14 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
       <DarkGreyCard>
         TVL
         <ChartLabel value={tvlHandler.value} valueUnit={'USD'} valueLabel={tvlHandler.valueLabel} />
-        <LineChart height={270} data={tvlDataList} labels={feePercents} onHoverData={tvlHandler.handleHoverData} />
+        <LineChart
+          height={270}
+          stack
+          filled
+          data={tvlDataList}
+          labels={feePercents}
+          onHoverData={tvlHandler.handleHoverData}
+        />
       </DarkGreyCard>
 
       <DarkGreyCard>
@@ -185,7 +192,6 @@ export default function PoolCharts({ poolData }: { poolData: PoolData }) {
           data={priceDataList}
           labels={feePercents}
           onHoverData={priceHandler.handleHoverData}
-          stack={false}
           fillMissingValueWithZero={false}
         />
       </DarkGreyCard>

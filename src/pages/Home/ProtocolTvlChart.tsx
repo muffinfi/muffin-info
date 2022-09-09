@@ -33,7 +33,7 @@ export default function ProtocolTvlChart({ color = '#56B2A4', height }: { height
           {handler.valueLabel ? <MonoSpace>{handler.valueLabel} (UTC)</MonoSpace> : null}
         </TYPE.main>
       </AutoColumn>
-      <LineChart height={height} data={formattedTvlData} color={color} onHoverData={handler.handleHoverData} />
+      <LineChart height={height} filled data={formattedTvlData} color={color} onHoverData={handler.handleHoverData} />
     </ChartCard>
   )
 }

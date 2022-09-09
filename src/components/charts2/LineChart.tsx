@@ -39,7 +39,8 @@ const Wrapper = styled(Card)`
 function Chart({
   data,
   isDollar = true,
-  stack = true,
+  stack,
+  filled,
   color,
   height,
   labels,
@@ -57,6 +58,7 @@ function Chart({
   height?: number | undefined
   labels?: string[]
   stack?: boolean
+  filled?: boolean
   fillMissingValueWithZero?: boolean
   onHoverData?: TimeSeriesHoverHandler | undefined
   topLeft?: ReactNode | undefined
@@ -94,7 +96,7 @@ function Chart({
 
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={mergedData} margin={{ top: 10, right: 3, left: 3, bottom: 0 }}>
-          {stack && (
+          {filled && (
             <defs>
               {dataList.map((_, i) =>
                 colors[i] == null ? null : (
@@ -137,7 +139,7 @@ function Chart({
               dataKey={(datum: MergedTimeSeriesDatum) => datum.values[i]}
               type="monotone"
               stroke={transparentize(0, colors[i % colors.length])}
-              fill={stack ? `url(#gradient-${i % colors.length})` : 'rgba(0,0,0,0)'}
+              fill={filled ? `url(#gradient-${i % colors.length})` : 'transparent'}
               fillOpacity={0.7}
               strokeWidth={dataList.length > 1 ? 1 : 2}
               isAnimationActive={false}
