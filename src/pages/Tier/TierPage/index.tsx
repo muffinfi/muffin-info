@@ -168,28 +168,25 @@ export default function TierPage({
               )}
             </RowFixed>
           </AutoColumn>
-
-          {activeNetwork !== EthereumNetworkInfo ? null : (
-            <RowFixed>
-              <StyledExternalLink
-                href={`https://app.muffin.fi/#/add/${tierData.pool.token0.address}/${tierData.pool.token1.address}/${tierData.sqrtGamma}`}
-              >
-                <ButtonGray width="170px" mr="12px" style={{ height: '44px' }}>
-                  <RowBetween>
-                    <Download size={24} />
-                    <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
-                  </RowBetween>
-                </ButtonGray>
-              </StyledExternalLink>
-              <StyledExternalLink
-                href={`https://app.muffin.fi/#/swap?inputCurrency=${tierData.pool.token0.address}&outputCurrency=${tierData.pool.token1.address}`}
-              >
-                <ButtonPrimary width="100px" style={{ height: '44px' }}>
-                  Trade
-                </ButtonPrimary>
-              </StyledExternalLink>
-            </RowFixed>
-          )}
+          <RowFixed>
+            <StyledExternalLink
+              href={`https://muffin.fi/#/add/${tierData.pool.token0.address}/${tierData.pool.token1.address}/${tierData.sqrtGamma}?chain=${activeNetwork.route}`}
+            >
+              <ButtonGray width="170px" mr="12px" style={{ height: '44px' }}>
+                <RowBetween>
+                  <Download size={24} />
+                  <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
+                </RowBetween>
+              </ButtonGray>
+            </StyledExternalLink>
+            <StyledExternalLink
+              href={`https://muffin.fi/#/swap?inputCurrency=${tierData.pool.token0.address}&outputCurrency=${tierData.pool.token1.address}&chain=${activeNetwork.route}`}
+            >
+              <ButtonPrimary width="100px" style={{ height: '44px' }}>
+                Trade
+              </ButtonPrimary>
+            </StyledExternalLink>
+          </RowFixed>
         </TitleRow>
 
         {/* General info */}

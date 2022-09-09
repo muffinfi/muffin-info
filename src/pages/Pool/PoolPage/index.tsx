@@ -169,27 +169,25 @@ export default function PoolPage({
               )}
             </RowFixed>
           </AutoColumn>
-          {activeNetwork !== EthereumNetworkInfo ? null : (
-            <RowFixed>
-              <StyledExternalLink
-                href={`https://muffin.fi/#/add/${poolData.token0.address}/${poolData.token1.address}`}
-              >
-                <ButtonGray width="170px" mr="12px" style={{ height: '44px' }}>
-                  <RowBetween>
-                    <Download size={24} />
-                    <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
-                  </RowBetween>
-                </ButtonGray>
-              </StyledExternalLink>
-              <StyledExternalLink
-                href={`https://muffin.fi/#/swap?inputCurrency=${poolData.token0.address}&outputCurrency=${poolData.token1.address}`}
-              >
-                <ButtonPrimary width="100px" style={{ height: '44px' }}>
-                  Trade
-                </ButtonPrimary>
-              </StyledExternalLink>
-            </RowFixed>
-          )}
+          <RowFixed>
+            <StyledExternalLink
+              href={`https://muffin.fi/#/add/${poolData.token0.address}/${poolData.token1.address}?chain=${activeNetwork.route}`}
+            >
+              <ButtonGray width="170px" mr="12px" style={{ height: '44px' }}>
+                <RowBetween>
+                  <Download size={24} />
+                  <div style={{ display: 'flex', alignItems: 'center' }}>Add Liquidity</div>
+                </RowBetween>
+              </ButtonGray>
+            </StyledExternalLink>
+            <StyledExternalLink
+              href={`https://muffin.fi/#/swap?inputCurrency=${poolData.token0.address}&outputCurrency=${poolData.token1.address}&chain=${activeNetwork.route}`}
+            >
+              <ButtonPrimary width="100px" style={{ height: '44px' }}>
+                Trade
+              </ButtonPrimary>
+            </StyledExternalLink>
+          </RowFixed>
         </TitleRow>
 
         {/* General info */}
