@@ -132,6 +132,7 @@
     "@data-ui/histogram": "^0.0.84",
     "@muffinfi/muffin-sdk": "^1.0.5",
     "@types/numeral": "^2.0.1",
+    "@types/recharts-scale": "^1.0.0",
     "@uniswap/default-token-list": "^2.0.0",
     "@uniswap/sdk-core": "^3.0.1",
     "@uniswap/v2-sdk": "^3.0.0-alpha.0",
@@ -151,6 +152,7 @@
     "react-hotkeys": "^2.0.0",
     "react-lightweight-charts-simple": "^0.7.0",
     "recharts": "^2.0.9",
+    "recharts-scale": "^0.4.5",
     "uifx": "^2.0.7"
   }
 }

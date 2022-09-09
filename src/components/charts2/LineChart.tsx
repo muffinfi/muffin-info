@@ -6,6 +6,8 @@ import useTheme from 'hooks/useTheme'
 import { transparentize } from 'polished'
 import React, { memo, ReactNode, useMemo } from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { getNiceTickValues } from 'recharts-scale'
+import { AxisDomain } from 'recharts/types/util/types'
 import styled from 'styled-components/macro'
 import { unixToDate } from 'utils/date'
 import { formatAmount, formatDollarAmount } from 'utils/numbers'
@@ -14,6 +16,14 @@ import { MergedTimeSeriesDatum, TimeSeriesDatum, TimeSeriesHoverHandler } from '
 import { cleanData } from './utils'
 
 dayjs.extend(utc)
+
+const yDomain: AxisDomain = [
+  0,
+  (dataMax: number) => {
+    const values = getNiceTickValues([0, dataMax * 1.1], 5, true)
+    return values[values.length - 1]
+  },
+]
 
 const Wrapper = styled(Card)`
   width: 100%;
@@ -73,7 +83,6 @@ function Chart({
   )
 
   const gridLineColor = 'rgba(255,255,255,0.1)'
-  const yAxisColor = 'rgba(255,255,255,0.0)'
   const xAxisColor = 'rgba(255,255,255,0.1)' //'#666'
 
   return (
@@ -108,8 +117,9 @@ function Chart({
           <YAxis
             orientation="right"
             tickFormatter={(value) => (isDollar ? formatDollarAmount : formatAmount)(value)}
-            axisLine={{ stroke: yAxisColor }}
-            tickLine={{ stroke: yAxisColor }}
+            axisLine={false}
+            tickLine={false}
+            domain={yDomain}
           />
           <Tooltip
             cursor={{ stroke: theme.bg5 }}
