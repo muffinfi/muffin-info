@@ -1,14 +1,13 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { TickMath, tickToPrice } from '@muffinfi/muffin-sdk'
-import { Token } from '@uniswap/sdk-core'
+import { TickMath } from '@muffinfi/muffin-sdk'
 import gql from 'graphql-tag'
 import JSBI from 'jsbi'
 import keyBy from 'lodash.keyby'
 import { TierKey } from 'state/tiers/reducer'
 import { normalizeKey } from 'state/tiers/utils'
 
-const PRICE_FIXED_DIGITS = 4
 const DEFAULT_SURROUNDING_TICKS = 500
+const ZERO = JSBI.BigInt(0)
 
 const SURROUNDING_TICKS = gql`
   query surroundingTicks($tierKey: Bytes!, $tickIdxLowerBound: Int!, $tickIdxUpperBound: Int!, $skip: Int!) {
@@ -19,10 +18,7 @@ const SURROUNDING_TICKS = gql`
       where: { tier: $tierKey, tickIdx_lte: $tickIdxUpperBound, tickIdx_gte: $tickIdxLowerBound }
     ) {
       tickIdx
-      liquidityGross
       liquidityNet
-      price0
-      price1
     }
   }
 `
@@ -54,10 +50,7 @@ interface TierResult {
 // Raw tick returned from GQL
 interface Tick {
   tickIdx: string
-  liquidityGross: string
   liquidityNet: string
-  price0: string
-  price1: string
 }
 
 interface SurroundingTicksResult {
@@ -66,12 +59,9 @@ interface SurroundingTicksResult {
 
 // Tick with fields parsed to JSBIs, and active liquidity computed.
 export interface TickProcessed {
-  liquidityGross: JSBI
   liquidityNet: JSBI
   tickIdx: number
   liquidityActive: JSBI
-  price0: string
-  price1: string
 }
 
 const fetchInitializedTicks = async (
@@ -168,13 +158,7 @@ export const fetchTicksSurroundingPrice = async (
   }
 
   const {
-    tier: {
-      tick: poolCurrentTick,
-      feeTier,
-      liquidity,
-      token0: { id: token0Address, decimals: token0Decimals },
-      token1: { id: token1Address, decimals: token1Decimals },
-    },
+    tier: { tick: poolCurrentTick, feeTier, liquidity },
   } = tierResult
 
   const tickSpacing = tierResult.tier.pool.tickSpacing
@@ -197,27 +181,14 @@ export const fetchTicksSurroundingPrice = async (
   }
 
   const { ticks: initializedTicks } = initializedTicksResult
+  console.log({ feeTier, tierResult, initializedTicks })
 
   const tickIdxToInitializedTick = keyBy(initializedTicks, 'tickIdx')
-
-  const token0 = new Token(1, token0Address, parseInt(token0Decimals))
-  const token1 = new Token(1, token1Address, parseInt(token1Decimals))
-
-  // console.log({ activeTickIdx, poolCurrentTickIdx }, 'Active ticks')
-
-  // If the pool's tick is MIN_TICK (-887272), then when we find the closest
-  // initializable tick to its left, the value would be smaller than MIN_TICK.
-  // In this case we must ensure that the prices shown never go below/above.
-  // what actual possible from the protocol.
-  const activeTickIdxForPrice = Math.max(TickMath.MIN_TICK, Math.min(TickMath.MAX_TICK, activeTickIdx))
 
   const activeTickProcessed: TickProcessed = {
     liquidityActive: JSBI.BigInt(liquidity),
     tickIdx: activeTickIdx,
-    liquidityNet: JSBI.BigInt(0),
-    price0: tickToPrice(token0, token1, activeTickIdxForPrice).toFixed(PRICE_FIXED_DIGITS),
-    price1: tickToPrice(token1, token0, activeTickIdxForPrice).toFixed(PRICE_FIXED_DIGITS),
-    liquidityGross: JSBI.BigInt(0),
+    liquidityNet: ZERO,
   }
 
   // If our active tick happens to be initialized (i.e. there is a position that starts or
@@ -225,7 +196,6 @@ export const fetchTicksSurroundingPrice = async (
   // correctly.
   const activeTick = tickIdxToInitializedTick[activeTickIdx]
   if (activeTick) {
-    activeTickProcessed.liquidityGross = JSBI.BigInt(activeTick.liquidityGross)
     activeTickProcessed.liquidityNet = JSBI.BigInt(activeTick.liquidityNet)
   }
 
@@ -258,24 +228,18 @@ export const fetchTicksSurroundingPrice = async (
         break
       }
 
-      // TODO:  Pending to delete price{0,1} properties
-      //
       // Prices of ticks are only needed when displaying the "ticks" in xaxis of the charts.
       // Therefore, we do not need to precompute them here. This solves a huge performance issue.
       const currentTickProcessed: TickProcessed = {
         liquidityActive: previousTickProcessed.liquidityActive,
         tickIdx: currentTickIdx,
-        liquidityNet: JSBI.BigInt(0),
-        price0: '', // tickToPrice(token0, token1, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
-        price1: '', // tickToPrice(token1, token0, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
-        liquidityGross: JSBI.BigInt(0),
+        liquidityNet: ZERO,
       }
 
       // Check if there is an initialized tick at our current tick.
       // If so copy the gross and net liquidity from the initialized tick.
       const currentInitializedTick = tickIdxToInitializedTick[currentTickIdx.toString()]
       if (currentInitializedTick) {
-        currentTickProcessed.liquidityGross = JSBI.BigInt(currentInitializedTick.liquidityGross)
         currentTickProcessed.liquidityNet = JSBI.BigInt(currentInitializedTick.liquidityNet)
       }
 
@@ -288,7 +252,7 @@ export const fetchTicksSurroundingPrice = async (
           previousTickProcessed.liquidityActive,
           JSBI.BigInt(currentInitializedTick.liquidityNet)
         )
-      } else if (direction == Direction.DESC && JSBI.notEqual(previousTickProcessed.liquidityNet, JSBI.BigInt(0))) {
+      } else if (direction == Direction.DESC && JSBI.notEqual(previousTickProcessed.liquidityNet, ZERO)) {
         // We are iterating descending, so look at the previous tick and apply any net liquidity.
         currentTickProcessed.liquidityActive = JSBI.subtract(
           previousTickProcessed.liquidityActive,

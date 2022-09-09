@@ -1,12 +1,13 @@
 import { echarts, ReactEChartsCore } from './utils'
 
+import { SupportedChainId } from '@muffinfi/muffin-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { mergeTimeSeriesData } from 'components/charts2/utils'
 import { AutoColumn } from 'components/Column'
 import Loader from 'components/Loader'
 import { TickProcessed } from 'data/tiers/tickData'
 import useTheme from 'hooks/useTheme'
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { RefObject, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { useTierDatas, useTierTickDataList } from 'state/tiers/hooks'
 import { TierData, TierKey } from 'state/tiers/reducer'
@@ -16,7 +17,18 @@ import { isAddress } from 'utils'
 import { CurrentPriceLabel } from './CurrentPriceLabel'
 import { DensityChartTooltipElement } from './DensityChartTooltipElement'
 
-const LIQUIDITY_SUPPORTED_CHAIN_ID: number[] = []
+const LIQUIDITY_UNSUPPORTED_CHAIN_ID: SupportedChainId[] = [SupportedChainId.RINKEBY]
+
+const priceFormatter = (price?: number) => {
+  if (price == null) return ''
+  if (price < 0.00001) return price.toExponential(5)
+  if (price < 0.0001) return price.toLocaleString(undefined, { maximumSignificantDigits: 2 })
+  if (price < 0.001) return price.toLocaleString(undefined, { maximumSignificantDigits: 3 })
+  if (price < 0.01) return price.toLocaleString(undefined, { maximumSignificantDigits: 4 })
+  if (price < 10_000) return price.toLocaleString(undefined, { maximumSignificantDigits: 5 })
+  if (price < 1_000_000) return price.toLocaleString(undefined, { maximumFractionDigits: 0 })
+  return price.toExponential(5)
+}
 
 const Wrapper = styled.div`
   position: relative;
@@ -34,7 +46,10 @@ const CurrentPriceRow = styled.div`
 export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: TierKey[]; isToken0Base: boolean }) {
   const [activeNetwork] = useActiveNetworkVersion()
 
-  const isNetworkSupport = useMemo(() => LIQUIDITY_SUPPORTED_CHAIN_ID.includes(activeNetwork.id), [activeNetwork.id])
+  const isNetworkSupport = useMemo(
+    () => !LIQUIDITY_UNSUPPORTED_CHAIN_ID.includes((activeNetwork.id as unknown) as SupportedChainId),
+    [activeNetwork.id]
+  )
 
   const theme = useTheme()
   const colors = useMemo(() => [theme.blue1, theme.yellow3, theme.red1, theme.green1, theme.pink1, theme.yellow2], [
@@ -42,6 +57,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
   ])
 
   const tooltipRef = useRef<DensityChartTooltipElement>()
+  const wrapperRef = useRef<HTMLDivElement>()
 
   // poolData
   const tierDatas = useTierDatas(isNetworkSupport ? tierKeys : undefined)
@@ -103,27 +119,32 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
     return { formattedData: mergeTimeSeriesData(formattedDatas, isToken0Base), currentPrices }
   }, [loading, error, tickDataList, isToken0Base, theme.pink1])
 
+  const getPrice = useCallback(
+    (tickIdx: string | number) => {
+      if (!token0?.decimals || !token1?.decimals) return undefined
+      const price0 = 1.0001 ** +tickIdx * 10 ** (token0.decimals - token1.decimals)
+      return isToken0Base ? price0 : 1 / price0
+    },
+    [token0?.decimals, token1?.decimals, isToken0Base]
+  )
+
+  const tickIdxFormatter = useCallback((tickIdx: string | number) => priceFormatter(getPrice(tickIdx)), [getPrice])
+
   const centerIndex = useMemo(
     () => formattedData?.findIndex(({ metadatas }) => metadatas?.findIndex((data) => data?.isActive) > -1),
     [formattedData]
   )
 
-  const priceFormatter = useCallback(
-    (tickIdx: string | number) => {
-      if (!token0?.decimals || !token1?.decimals) return ''
-
-      const price0 = 1.0001 ** +tickIdx * 10 ** (token0.decimals - token1.decimals)
-      const price = isToken0Base ? price0 : 1 / price0
-
-      if (price < 0.00001) return price.toExponential(5)
-      if (price < 0.0001) return price.toLocaleString(undefined, { maximumSignificantDigits: 2 })
-      if (price < 0.001) return price.toLocaleString(undefined, { maximumSignificantDigits: 3 })
-      if (price < 0.01) return price.toLocaleString(undefined, { maximumSignificantDigits: 4 })
-      if (price < 10_000) return price.toLocaleString(undefined, { maximumSignificantDigits: 5 })
-      if (price < 1_000_000) return price.toLocaleString(undefined, { maximumFractionDigits: 0 })
-      return price.toExponential(5)
-    },
-    [token0, token1, isToken0Base]
+  const currentPriceLabels: ([string, string] | undefined)[] | undefined = useMemo(
+    () =>
+      currentPrices?.map((currentPrice) => {
+        const price = getPrice(currentPrice.tickIdx)
+        if (!price) return undefined
+        return isToken0Base
+          ? [priceFormatter(price), priceFormatter(1 / price)]
+          : [priceFormatter(1 / price), priceFormatter(price)]
+      }),
+    [currentPrices, getPrice, isToken0Base]
   )
 
   const option = useMemo(
@@ -144,7 +165,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
                 type: 'shadow',
                 label: {
                   show: true,
-                  formatter: ({ value }: { value: string }) => priceFormatter(value),
+                  formatter: ({ value }: { value: string }) => tickIdxFormatter(value),
                 },
               },
               formatter: (params: any) => {
@@ -176,7 +197,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
             ],
             xAxis: {
               data: formattedData.map(({ time }) => time),
-              axisLabel: { formatter: priceFormatter },
+              axisLabel: { formatter: tickIdxFormatter },
             },
             yAxis: {
               axisLabel: {
@@ -204,8 +225,30 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
               large: formattedData.length > 100,
             })),
           },
-    [centerIndex, colors, firstTierData?.pool.tickSpacing, formattedData, priceFormatter, tickDataList, token0, token1]
+    [
+      centerIndex,
+      colors,
+      firstTierData?.pool.tickSpacing,
+      formattedData,
+      tickIdxFormatter,
+      tickDataList,
+      token0,
+      token1,
+    ]
   )
+
+  // reset wrapper width when parent size changed, needed to resize from larger width to smaller width,
+  // otherwise wrapper keeps larger width since its children size is larger
+  useEffect(() => {
+    const handler = () => {
+      const wrapper = wrapperRef.current
+      if (!wrapper) return
+      const width = wrapper.parentElement?.getBoundingClientRect().width
+      wrapper.style.width = `${width}px`
+    }
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
 
   if (!isNetworkSupport) {
     return (
@@ -225,8 +268,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
         <div>No Data</div>
       ) : (
         <AutoColumn gap="8px">
-          <Wrapper>
-            {/* TODO: resize the chart */}
+          <Wrapper ref={wrapperRef as RefObject<HTMLDivElement>}>
             <ReactEChartsCore
               style={{ height: 400 }}
               echarts={echarts}
@@ -244,8 +286,8 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
                 key={i}
                 token0={token0}
                 token1={token1}
-                price0={currentPrice.price0}
-                price1={currentPrice.price1}
+                price0={currentPriceLabels?.[i]?.[0]}
+                price1={currentPriceLabels?.[i]?.[1]}
                 feeTier={currentPrices.length === 1 ? undefined : tierDatas[i].feeTier}
                 color={currentPrices.length === 1 ? theme.pink1 : colors[i % colors.length]}
               />

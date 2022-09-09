@@ -62,12 +62,8 @@ export function CurrentPriceLabel({ token0, token1, color, price0, price1, feeTi
             badge
           )}
         </RowFixed>
-        <TYPE.label>{`1 ${token0?.symbol} = ${Number(price0).toLocaleString(undefined, {
-          minimumSignificantDigits: 1,
-        })} ${token1?.symbol}`}</TYPE.label>
-        <TYPE.label>{`1 ${token1?.symbol} = ${Number(price1).toLocaleString(undefined, {
-          minimumSignificantDigits: 1,
-        })} ${token0?.symbol}`}</TYPE.label>
+        <TYPE.label>{`1 ${token0?.symbol} = ${price0} ${token1?.symbol}`}</TYPE.label>
+        <TYPE.label>{`1 ${token1?.symbol} = ${price1} ${token0?.symbol}`}</TYPE.label>
       </AutoColumn>
     </Wrapper>
   )

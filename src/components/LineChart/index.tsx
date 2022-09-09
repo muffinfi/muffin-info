@@ -1,14 +1,14 @@
-import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from 'react'
-import { createChart, IChartApi } from 'lightweight-charts'
-import { darken } from 'polished'
 import { RowBetween } from 'components/Row'
-import Card from '../Card'
-import styled from 'styled-components/macro'
-import useTheme from 'hooks/useTheme'
-import usePrevious from 'hooks/usePrevious'
-import { formatDollarAmount } from 'utils/numbers'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import usePrevious from 'hooks/usePrevious'
+import useTheme from 'hooks/useTheme'
+import { createChart, IChartApi } from 'lightweight-charts'
+import { darken } from 'polished'
+import React, { Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
+import { formatDollarAmount } from 'utils/numbers'
+import Card from '../Card'
 dayjs.extend(utc)
 
 const Wrapper = styled(Card)`
@@ -79,14 +79,10 @@ const LineChart = ({
   }, [chartCreated, chartRef, height])
 
   // add event listener for resize
-  const isClient = typeof window === 'object'
   useEffect(() => {
-    if (!isClient) {
-      return
-    }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [isClient, chartRef, handleResize]) // Empty array ensures that effect is only run on mount and unmount
+  }, [handleResize]) // Empty array ensures that effect is only run on mount and unmount
 
   // if chart not instantiated in canvas, create it
   useEffect(() => {
