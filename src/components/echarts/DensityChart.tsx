@@ -17,7 +17,7 @@ import { isAddress } from 'utils'
 import { CurrentPriceLabel } from './CurrentPriceLabel'
 import { DensityChartTooltipElement } from './DensityChartTooltipElement'
 
-const LIQUIDITY_UNSUPPORTED_CHAIN_ID: SupportedChainId[] = [SupportedChainId.RINKEBY]
+const LIQUIDITY_UNSUPPORTED_CHAIN_ID: SupportedChainId[] = [SupportedChainId.MAINNET, SupportedChainId.RINKEBY]
 
 const priceFormatter = (price?: number) => {
   if (price == null) return ''
