@@ -1,15 +1,16 @@
-import OPTIMISM_LOGO_URL from '../assets/images/optimism.svg'
+import { SupportedChainId } from '@muffinfi/muffin-sdk'
 import ARBITRUM_LOGO_URL from '../assets/images/arbitrum.svg'
 import ETHEREUM_LOGO_URL from '../assets/images/ethereum-logo.png'
+import OPTIMISM_LOGO_URL from '../assets/images/optimism.svg'
 import POLYGON_LOGO_URL from '../assets/images/polygon-logo.png'
 
 export enum SupportedNetwork {
-  ETHEREUM,
-  ARBITRUM,
-  OPTIMISM,
-  POLYGON,
-  RINKEBY,
-  GOERLI,
+  ETHEREUM = SupportedChainId.MAINNET,
+  RINKEBY = SupportedChainId.RINKEBY,
+  GOERLI = SupportedChainId.GOERLI,
+  ARBITRUM = 42161,
+  OPTIMISM = 10,
+  POLYGON = 137,
 }
 
 export type NetworkInfo = {
