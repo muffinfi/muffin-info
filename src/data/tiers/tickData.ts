@@ -181,7 +181,6 @@ export const fetchTicksSurroundingPrice = async (
   }
 
   const { ticks: initializedTicks } = initializedTicksResult
-  console.log({ feeTier, tierResult, initializedTicks })
 
   const tickIdxToInitializedTick = keyBy(initializedTicks, 'tickIdx')
 
