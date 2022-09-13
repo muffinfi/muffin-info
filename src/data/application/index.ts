@@ -51,7 +51,7 @@ export function useFetchedSubgraphStatus(): {
     variables: {
       // prettier-ignore
       name:
-        activeNetwork === EthereumNetworkInfo ? 'virtues-milkier/muffin-rinkeby' :  // FIXME: temp
+        activeNetwork === EthereumNetworkInfo ? 'muffinfi/muffin-mainnet' :
         activeNetwork === RinkebyNetworkInfo ? 'virtues-milkier/muffin-rinkeby' :
         activeNetwork === GoerliNetworkInfo ? 'dkenw/muffin-goerli' :
         activeNetwork === ArbitrumNetworkInfo ? 'ianlapham/uniswap-arbitrum-one' : 'ianlapham/uniswap-optimism',
