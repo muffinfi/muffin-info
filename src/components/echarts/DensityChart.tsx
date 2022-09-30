@@ -129,10 +129,27 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
 
   const tickIdxFormatter = useCallback((tickIdx: string | number) => priceFormatter(getPrice(tickIdx)), [getPrice])
 
-  const centerIndex = useMemo(
-    () => formattedData?.findIndex(({ metadatas }) => metadatas?.findIndex((data) => data?.isActive) > -1),
-    [formattedData]
-  )
+  const tickSpacing = firstTierData?.pool.tickSpacing ?? 100
+  const initialZoom = useMemo(() => {
+    if (!formattedData) return undefined
+
+    const [min, max] = formattedData.reduce(
+      ([min, max], { metadatas }, i) => {
+        const isActive = metadatas?.findIndex((data) => data?.isActive) > -1
+        if (isActive) {
+          if (min === -1) min = i
+          max = i
+        }
+        return [min, max]
+      },
+      [-1, -1] as [number, number]
+    )
+
+    const centerIndex = Math.floor((min + max) / 2)
+    const zoomPadding = Math.max(tickSpacing * 3, 30)
+
+    return { startValue: centerIndex - zoomPadding, endValue: centerIndex + zoomPadding }
+  }, [formattedData, tickSpacing])
 
   const currentPriceLabels: ([string, string] | undefined)[] | undefined = useMemo(
     () =>
@@ -148,7 +165,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
 
   const option = useMemo(
     () =>
-      !formattedData || !currentPrices || centerIndex == null
+      !formattedData || !currentPrices || initialZoom == null
         ? {}
         : {
             color: colors,
@@ -177,7 +194,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
                   token0,
                   token1,
                   tickIdx: data.time,
-                  tickSpacing: firstTierData?.pool.tickSpacing,
+                  tickSpacing,
                   // activeTickIdx: currentPriceData.tickIdx,
                   // liquidityActive: currentPriceData.liquidityActive,
                 })
@@ -191,7 +208,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
                 left: 2,
                 right: 8,
                 borderColor: 'transparent',
-                ...(tickDataList.length > 1 ? undefined : { startValue: centerIndex - 15, endValue: centerIndex + 15 }),
+                ...initialZoom,
               },
             ],
             xAxis: {
@@ -238,17 +255,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
               },
             })),
           },
-    [
-      formattedData,
-      centerIndex,
-      colors,
-      tickDataList,
-      tickIdxFormatter,
-      token0,
-      token1,
-      firstTierData?.pool.tickSpacing,
-      currentPrices,
-    ]
+    [formattedData, currentPrices, colors, initialZoom, tickIdxFormatter, tickDataList, token0, token1, tickSpacing]
   )
 
   // reset wrapper width when parent size changed, needed to resize from larger width to smaller width,
