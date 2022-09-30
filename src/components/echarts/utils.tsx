@@ -1,24 +1,24 @@
 export { default as ReactEChartsCore } from 'echarts-for-react/lib/core'
 import { BarChart } from 'echarts/charts'
 import {
-  // DataZoomSliderComponent,
   // VisualMapComponent,
   // VisualMapContinuousComponent,
   // VisualMapPiecewiseComponent,
   // AriaComponent,
   // TransformComponent,
   DatasetComponent,
-  // TimelineComponent,
-  // MarkPointComponent,
-  // MarkLineComponent,
   // MarkAreaComponent,
   // LegendComponent,
   // LegendScrollComponent,
   // LegendPlainComponent,
   DataZoomComponent,
   DataZoomInsideComponent,
+  DataZoomSliderComponent,
   // GridSimpleComponent,
   GridComponent,
+  // TimelineComponent,
+  // MarkPointComponent,
+  MarkLineComponent,
   // AxisPointerComponent,
   // BrushComponent,
   TitleComponent,
@@ -39,11 +39,13 @@ echartsCore.use([
   DatasetComponent,
   DataZoomComponent,
   DataZoomInsideComponent,
+  DataZoomSliderComponent,
   TitleComponent,
   TooltipComponent,
   GridComponent,
   BarChart,
   CanvasRenderer,
+  MarkLineComponent,
 ])
 
 export const echarts = echartsCore

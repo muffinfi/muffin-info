@@ -13,7 +13,7 @@ import { useTierDatas, useTierTickDataList } from 'state/tiers/hooks'
 import { TierData, TierKey } from 'state/tiers/reducer'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
-import { isAddress } from 'utils'
+import { feeTierPercent, isAddress } from 'utils'
 import { CurrentPriceLabel } from './CurrentPriceLabel'
 import { DensityChartTooltipElement } from './DensityChartTooltipElement'
 
@@ -95,7 +95,6 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
   const { formattedData, currentPrices } = useMemo(() => {
     if (loading || error) return {}
     const currentPrices: TickProcessed[] = new Array(tickDataList.length)
-    const isSingleTier = tickDataList.length === 1
     const formattedDatas = tickDataList.map((tickData, i) => {
       if (!tickData) return []
       const ticks: TickProcessed[] = isToken0Base ? tickData.ticksProcessed : [...tickData.ticksProcessed].reverse()
@@ -111,13 +110,13 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
           metadata: {
             tick: t,
             isActive,
-            itemStyle: isActive && isSingleTier ? { color: theme.pink1 } : undefined,
           },
         }
       })
     })
-    return { formattedData: mergeTimeSeriesData(formattedDatas, isToken0Base), currentPrices }
-  }, [loading, error, tickDataList, isToken0Base, theme.pink1])
+    const formattedData = mergeTimeSeriesData(formattedDatas, isToken0Base)
+    return formattedData.length ? { formattedData, currentPrices } : {}
+  }, [loading, error, tickDataList, isToken0Base])
 
   const getPrice = useCallback(
     (tickIdx: string | number) => {
@@ -149,7 +148,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
 
   const option = useMemo(
     () =>
-      !formattedData || centerIndex == null
+      !formattedData || !currentPrices || centerIndex == null
         ? {}
         : {
             color: colors,
@@ -212,28 +211,43 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
             },
             series: tickDataList.map((tickData, i) => ({
               name: tickData?.feeTier,
-              data: formattedData.map(({ time, values, metadatas }) => ({
+              type: 'bar',
+              stack: 'x',
+              data: formattedData.map(({ time, values }) => ({
                 name: time,
                 value: values[i],
-                itemStyle: metadatas[i]?.itemStyle,
                 emphasis: {
                   focus: 'series',
                 },
               })),
-              type: 'bar',
-              stack: 'x',
               large: formattedData.length > 100,
+              markLine: {
+                silent: true,
+                symbol: 'none',
+                label: {
+                  color: 'white',
+                  textBorderColor: 'transparent',
+                  formatter: `Current Price Tick of ${feeTierPercent(tickData?.feeTier ?? 0)}`,
+                },
+                data: [
+                  {
+                    name: 'Current Price Tick',
+                    xAxis: currentPrices[i].tickIdx.toString(),
+                  },
+                ],
+              },
             })),
           },
     [
+      formattedData,
       centerIndex,
       colors,
-      firstTierData?.pool.tickSpacing,
-      formattedData,
-      tickIdxFormatter,
       tickDataList,
+      tickIdxFormatter,
       token0,
       token1,
+      firstTierData?.pool.tickSpacing,
+      currentPrices,
     ]
   )
 
@@ -288,8 +302,8 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
                 token1={token1}
                 price0={currentPriceLabels?.[i]?.[0]}
                 price1={currentPriceLabels?.[i]?.[1]}
-                feeTier={currentPrices.length === 1 ? undefined : tierDatas[i].feeTier}
-                color={currentPrices.length === 1 ? theme.pink1 : colors[i % colors.length]}
+                feeTier={tierDatas[i].feeTier}
+                color={colors[i % colors.length]}
               />
             ))}
           </CurrentPriceRow>
