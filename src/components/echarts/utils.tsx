@@ -1,5 +1,5 @@
 export { default as ReactEChartsCore } from 'echarts-for-react/lib/core'
-import { BarChart } from 'echarts/charts'
+import { BarChart, LineChart } from 'echarts/charts'
 import {
   // VisualMapComponent,
   // VisualMapContinuousComponent,
@@ -12,8 +12,8 @@ import {
   // LegendScrollComponent,
   // LegendPlainComponent,
   DataZoomComponent,
-  DataZoomInsideComponent,
-  DataZoomSliderComponent,
+  // DataZoomInsideComponent,
+  // DataZoomSliderComponent,
   // GridSimpleComponent,
   GridComponent,
   // TimelineComponent,
@@ -29,7 +29,7 @@ import {
   // ParallelComponent,
   // CalendarComponent,
   // GraphicComponent,
-  // ToolboxComponent,
+  ToolboxComponent,
   TooltipComponent,
 } from 'echarts/components'
 import * as echartsCore from 'echarts/core'
@@ -38,12 +38,12 @@ import { CanvasRenderer } from 'echarts/renderers'
 echartsCore.use([
   DatasetComponent,
   DataZoomComponent,
-  DataZoomInsideComponent,
-  DataZoomSliderComponent,
   TitleComponent,
+  ToolboxComponent,
   TooltipComponent,
   GridComponent,
   BarChart,
+  LineChart,
   CanvasRenderer,
   MarkLineComponent,
 ])

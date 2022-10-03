@@ -6,14 +6,15 @@ import { mergeTimeSeriesData } from 'components/charts2/utils'
 import { AutoColumn } from 'components/Column'
 import Loader from 'components/Loader'
 import { TickProcessed } from 'data/tiers/tickData'
+import { EChartsInstance } from 'echarts-for-react'
 import useTheme from 'hooks/useTheme'
-import React, { RefObject, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import { useTierDatas, useTierTickDataList } from 'state/tiers/hooks'
 import { TierData, TierKey } from 'state/tiers/reducer'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
-import { feeTierPercent, isAddress } from 'utils'
+import { isAddress } from 'utils'
 import { CurrentPriceLabel } from './CurrentPriceLabel'
 import { DensityChartTooltipElement } from './DensityChartTooltipElement'
 
@@ -43,6 +44,8 @@ const CurrentPriceRow = styled.div`
   flex-wrap: wrap;
 `
 
+const CHART_STYLE = { height: 400 }
+
 export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: TierKey[]; isToken0Base: boolean }) {
   const [activeNetwork] = useActiveNetworkVersion()
 
@@ -56,6 +59,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
     theme,
   ])
 
+  const [echartsInstance, setEchartsInstance] = useState<EChartsInstance>()
   const tooltipRef = useRef<DensityChartTooltipElement>()
   const wrapperRef = useRef<HTMLDivElement>()
 
@@ -114,7 +118,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
         }
       })
     })
-    const formattedData = mergeTimeSeriesData(formattedDatas, isToken0Base)
+    const formattedData = mergeTimeSeriesData(formattedDatas, isToken0Base, 0)
     return formattedData.length ? { formattedData, currentPrices } : {}
   }, [loading, error, tickDataList, isToken0Base])
 
@@ -170,7 +174,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
         : {
             color: colors,
             grid: {
-              top: 24,
+              top: 32,
               bottom: 90,
               left: 1,
               right: 1,
@@ -202,6 +206,7 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
               },
             },
             dataZoom: [
+              { type: 'inside', minValueSpan: Math.max(tickSpacing * 2, 10), ...initialZoom },
               {
                 type: 'slider',
                 showDetail: false,
@@ -230,22 +235,19 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
               name: tickData?.feeTier,
               type: 'bar',
               stack: 'x',
+              areaStyle: {},
+              emphasis: { focus: 'series' },
               data: formattedData.map(({ time, values }) => ({
                 name: time,
                 value: values[i],
-                emphasis: {
-                  focus: 'series',
-                },
               })),
+              silent: true,
+              animation: false,
               large: formattedData.length > 100,
               markLine: {
                 silent: true,
                 symbol: 'none',
-                label: {
-                  color: 'white',
-                  textBorderColor: 'transparent',
-                  formatter: `Current Price Tick of ${feeTierPercent(tickData?.feeTier ?? 0)}`,
-                },
+                label: { show: false },
                 data: [
                   {
                     name: 'Current Price Tick',
@@ -271,6 +273,48 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
     return () => window.removeEventListener('resize', handler)
   }, [])
 
+  // CurrentPriceLabels
+  const legends = useMemo(
+    () =>
+      currentPrices?.map((_, i) => (
+        <CurrentPriceLabel
+          key={i}
+          token0={token0}
+          token1={token1}
+          price0={currentPriceLabels?.[i]?.[0]}
+          price1={currentPriceLabels?.[i]?.[1]}
+          feeTier={tierDatas[i].feeTier}
+          color={colors[i % colors.length]}
+          onClick={() => {
+            echartsInstance.dispatchAction({
+              type: 'dataZoom',
+              ...initialZoom,
+            })
+            currentPrices.length > 1 &&
+              echartsInstance.dispatchAction({
+                type: 'highlight',
+                seriesIndex: i,
+              })
+          }}
+          onMouseEnter={
+            currentPrices.length > 1
+              ? () =>
+                  echartsInstance.dispatchAction({
+                    type: 'highlight',
+                    seriesIndex: i,
+                  })
+              : undefined
+          }
+          onMouseLeave={
+            currentPrices.length > 1
+              ? () => echartsInstance.dispatchAction({ type: 'downplay', seriesIndex: i })
+              : undefined
+          }
+        />
+      )),
+    [colors, currentPriceLabels, currentPrices, echartsInstance, initialZoom, tierDatas, token0, token1]
+  )
+
   if (!isNetworkSupport) {
     return (
       <TYPE.main as="div" css={{ margin: '16px 0', fontWeight: 500, textAlign: 'center', color: theme.text2 }}>
@@ -291,29 +335,16 @@ export default function DensityChart({ tierKeys, isToken0Base }: { tierKeys: Tie
         <AutoColumn gap="8px">
           <Wrapper ref={wrapperRef as RefObject<HTMLDivElement>}>
             <ReactEChartsCore
-              style={{ height: 400 }}
+              style={CHART_STYLE}
+              opts={CHART_STYLE}
               echarts={echarts}
+              onChartReady={setEchartsInstance}
               option={option}
               notMerge
               lazyUpdate
-              opts={{
-                height: 400,
-              }}
             />
           </Wrapper>
-          <CurrentPriceRow>
-            {currentPrices?.map((currentPrice, i) => (
-              <CurrentPriceLabel
-                key={i}
-                token0={token0}
-                token1={token1}
-                price0={currentPriceLabels?.[i]?.[0]}
-                price1={currentPriceLabels?.[i]?.[1]}
-                feeTier={tierDatas[i].feeTier}
-                color={colors[i % colors.length]}
-              />
-            ))}
-          </CurrentPriceRow>
+          <CurrentPriceRow>{legends}</CurrentPriceRow>
         </AutoColumn>
       )}
     </>
