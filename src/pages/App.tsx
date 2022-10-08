@@ -130,6 +130,15 @@ const WarningBanner = styled.div`
   font-weight: 500;
 `
 
+const TestnetBanner = styled.div`
+  font-weight: 700;
+  margin-bottom: 1rem;
+  width: 90%;
+  background: rgba(255, 0, 0, 0.33);
+  border-radius: 4px;
+  padding: 4px;
+`
+
 const BLOCK_DIFFERENCE_THRESHOLD = 30
 
 export default function App() {
@@ -209,9 +218,8 @@ export default function App() {
           ) : (
             <BodyWrapper warningActive={showNotSyncedWarning}>
               <Popups />
-              {activeNetwork.testnet && (
-                <div style={{ opacity: 0.2, fontWeight: 500, marginBottom: '1rem' }}>(Testnet)</div>
-              )}
+
+              {activeNetwork.testnet && <TestnetBanner>(Testnet)</TestnetBanner>}
               <Switch>
                 {/* TODO: Old pages pending to delete  */}
                 {/* <Route exact strict path="/:networkID?/pools/:poolId/tiers-0/:tierId" component={EnhancedTierPageOriginal} /> */}
