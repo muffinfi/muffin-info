@@ -104,7 +104,7 @@ const isTestnet = () => {
 }
 
 export const SUPPORTED_NETWORK_VERSIONS: NetworkInfo[] = isTestnet()
-  ? [RinkebyNetworkInfo, GoerliNetworkInfo]
+  ? [GoerliNetworkInfo]
   : [
       EthereumNetworkInfo,
       // PolygonNetworkInfo,
